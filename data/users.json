@@ -9,7 +9,10 @@
       "tier": "elite_5k",
       "active": true,
       "amountPaid": 5000,
-      "currency": "NGN"
+      "currency": "NGN",
+      "startDate": "2026-08-22T18:21:52.879Z",
+      "endDate": "2027-08-22T18:21:52.879Z",
+      "autoRenew": true
     },
     "portfolio": {
       "id": "port_kristos_01",
@@ -142,7 +145,10 @@
       "tier": "elite_5k",
       "active": true,
       "amountPaid": 5000,
-      "currency": "NGN"
+      "currency": "NGN",
+      "startDate": "2026-08-22T18:21:52.879Z",
+      "endDate": "2027-08-22T18:21:52.879Z",
+      "autoRenew": true
     },
     "portfolio": {
       "id": "port_elena_01",
@@ -289,7 +295,10 @@
       "tier": "elite_5k",
       "active": true,
       "amountPaid": 5000,
-      "currency": "NGN"
+      "currency": "NGN",
+      "startDate": "2026-08-22T18:21:52.879Z",
+      "endDate": "2027-08-22T18:21:52.879Z",
+      "autoRenew": true
     },
     "portfolio": {
       "id": "port_marcus_01",
@@ -410,7 +419,10 @@
       "tier": "elite_5k",
       "active": true,
       "amountPaid": 5000,
-      "currency": "NGN"
+      "currency": "NGN",
+      "startDate": "2026-08-22T18:21:52.879Z",
+      "endDate": "2027-08-22T18:21:52.879Z",
+      "autoRenew": true
     },
     "portfolio": {
       "id": "port_sora_01",
@@ -530,7 +542,10 @@
       "tier": "elite_5k",
       "active": true,
       "amountPaid": 5000,
-      "currency": "NGN"
+      "currency": "NGN",
+      "startDate": "2026-08-22T18:21:52.879Z",
+      "endDate": "2027-08-22T18:21:52.879Z",
+      "autoRenew": true
     },
     "portfolio": {
       "id": "port_zara_01",
@@ -650,7 +665,10 @@
       "tier": "elite_5k",
       "active": true,
       "amountPaid": 0,
-      "currency": "NGN"
+      "currency": "NGN",
+      "startDate": "2026-08-22T18:21:52.879Z",
+      "endDate": "2027-08-22T18:21:52.879Z",
+      "autoRenew": true
     },
     "portfolio": {
       "id": "port_kristos_01",
