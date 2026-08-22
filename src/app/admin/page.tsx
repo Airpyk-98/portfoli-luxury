@@ -655,6 +655,15 @@ export default function AdminControlPage() {
                   />
 
                   <GlassInput
+                    label="Flutterwave Encryption Key (FLWSECK_3DES-...)"
+                    type="password"
+                    placeholder="FLWSECK_3DES-xxxxxxxxxxxxxxxxxxxx"
+                    value={paymentSettings.encryptionKey}
+                    onChange={(e) => setPaymentSettings({ ...paymentSettings, encryptionKey: e.target.value })}
+                    helperText="Required for 3DES direct charge encryption and secure payload hashing"
+                  />
+
+                  <GlassInput
                     label="Flutterwave Public Key (FLWPUBK-...)"
                     placeholder="FLWPUBK-xxxxxxxxxxxxxxxxxxxx"
                     value={paymentSettings.publicKey}

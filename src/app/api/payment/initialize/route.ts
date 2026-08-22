@@ -1,10 +1,62 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { Database } from '@/lib/storage';
 import { getPaymentSettings, saveTransaction } from '@/lib/payment-settings';
 import { TierType, PaymentTransaction } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+/**
+ * 3DES Payload Encryption Helper for Flutterwave Direct Charges
+ * Uses Triple DES (des-ede3) algorithm with the merchant's Encryption Key.
+ */
+export function encryptFlutterwavePayload(encryptionKey: string, payload: Record<string, any>): string {
+  try {
+    const text = typeof payload === 'string' ? payload : JSON.stringify(payload);
+    // Triple DES in Node.js
+    const key = Buffer.from(encryptionKey, 'utf8');
+    const cipher = crypto.createCipheriv('des-ede3', key, Buffer.alloc(0));
+    let encrypted = cipher.update(text, 'utf8', 'base64');
+    encrypted += cipher.final('base64');
+    return encrypted;
+  } catch (err) {
+    console.error('3DES payload encryption error:', err);
+    return '';
+  }
+}
+
+/**
+ * Flutterwave v4 OAuth 2.0 Token Generation
+ * Exchanges client_id and client_secret for an access_token.
+ */
+async function getV4OAuthToken(clientId: string, clientSecret: string): Promise<string | null> {
+  try {
+    if (!clientId || !clientSecret) return null;
+
+    const params = new URLSearchParams();
+    params.append('client_id', clientId.trim());
+    params.append('client_secret', clientSecret.trim());
+    params.append('grant_type', 'client_credentials');
+
+    const res = await fetch('https://idp.flutterwave.com/realms/flutterwave/protocol/openid-connect/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params.toString(),
+    });
+
+    const data = await res.json();
+    if (data.access_token) {
+      return data.access_token;
+    }
+    console.warn('Flutterwave v4 OAuth token response did not contain access_token:', data);
+  } catch (err) {
+    console.error('Error fetching Flutterwave v4 OAuth token:', err);
+  }
+  return null;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -40,7 +92,7 @@ export async function POST(req: NextRequest) {
       returnUrl ||
       `${proto}://${host}/dashboard?payment=success&tx_ref=${txRef}&tier=${selectedTier}`;
 
-    // Record Pending Transaction
+    // Record Pending Transaction in Ledger
     const transaction: PaymentTransaction = {
       id: `tx_${Date.now()}`,
       txRef,
@@ -61,14 +113,28 @@ export async function POST(req: NextRequest) {
     };
     saveTransaction(transaction);
 
-    // If Flutterwave Secret Key is configured, make real API call
-    if (settings.secretKey) {
+    // 1. Check for v4 OAuth 2.0 (Client ID & Client Secret)
+    let authHeader = '';
+    if (settings.clientId && settings.clientSecret) {
+      const v4Token = await getV4OAuthToken(settings.clientId, settings.clientSecret);
+      if (v4Token) {
+        authHeader = `Bearer ${v4Token}`;
+      }
+    }
+
+    // 2. Fallback to Secret Key if v4 OAuth is not configured
+    if (!authHeader && settings.secretKey) {
+      authHeader = `Bearer ${settings.secretKey.trim()}`;
+    }
+
+    // 3. Initiate payment with Flutterwave API
+    if (authHeader) {
       try {
         const flwResponse = await fetch('https://api.flutterwave.com/v3/payments', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${settings.secretKey}`,
+            Authorization: authHeader,
           },
           body: JSON.stringify({
             tx_ref: txRef,
@@ -85,7 +151,7 @@ export async function POST(req: NextRequest) {
               name: user.name || user.displayName || user.username,
             },
             customizations: {
-              title: 'portfoli — Elite Annual Subscription',
+              title: 'portfoli — Luxury Portfolio Subscription',
               description: `1-Year Access to ${selectedTier === 'elite_5k' ? 'Elite 5GB' : 'Pro 1GB'} Architecture & Custom Subdomain`,
               logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&auto=format&fit=crop&q=80',
             },
@@ -102,17 +168,24 @@ export async function POST(req: NextRequest) {
             amount,
             currency: 'NGN',
             tier: selectedTier,
+            v4Authenticated: Boolean(settings.clientId && settings.clientSecret),
           });
         } else {
-          console.warn('Flutterwave API returned non-success:', flwData);
-          // Fallback to client-side modal or direct verify URL with error details
+          console.warn('Flutterwave payments API response:', flwData);
+          if (flwData.message) {
+            return NextResponse.json({
+              success: false,
+              message: `Flutterwave API: ${flwData.message}`,
+              details: flwData,
+            }, { status: 400 });
+          }
         }
-      } catch (flwErr) {
+      } catch (flwErr: any) {
         console.error('Error connecting to Flutterwave API:', flwErr);
       }
     }
 
-    // Direct checkout fallback if keys are being configured or in local sandbox
+    // Return redirect fallback for local development or pending keys configuration
     return NextResponse.json({
       success: true,
       checkoutUrl: redirectUrl,
@@ -120,14 +193,12 @@ export async function POST(req: NextRequest) {
       amount,
       currency: 'NGN',
       tier: selectedTier,
-      isDirectVerification: !settings.secretKey,
-      message: settings.secretKey
-        ? 'Payment initiated via Flutterwave gateway'
-        : 'Flutterwave credentials pending in Admin Portal. Direct sandbox activation enabled.',
+      isSimulation: !authHeader,
     });
-  } catch (error: any) {
+  } catch (err: any) {
+    console.error('Payment initialization failed:', err);
     return NextResponse.json(
-      { success: false, message: error.message || 'Payment initialization failed' },
+      { success: false, message: err.message || 'Payment initiation error' },
       { status: 500 }
     );
   }
