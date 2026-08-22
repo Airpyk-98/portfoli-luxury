@@ -1,11 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { GlassCard } from '@/components/ui/glass-card';
 import { GlassButton } from '@/components/ui/glass-button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { KineticTypography, ScrollReveal, PerspectiveTilt } from '@/components/ui/kinetic-motion';
+import { SamplePortfoliosModal } from '@/components/sample-portfolios-modal';
+import { SAMPLE_TEMPLATES } from '@/lib/sample-templates';
 import {
   Sparkles,
   Layers,
@@ -21,11 +23,28 @@ import {
   Eye,
   Sliders,
   Award,
+  Palette,
+  Layout,
+  Type,
 } from 'lucide-react';
 
 export default function LandingPage() {
+  const [isSampleModalOpen, setIsSampleModalOpen] = useState(false);
+  const [selectedTemplateFilter, setSelectedTemplateFilter] = useState<string>('all');
+
+  const filteredTemplates = SAMPLE_TEMPLATES.filter((t) => {
+    if (selectedTemplateFilter === 'all') return true;
+    return t.displayMode === selectedTemplateFilter;
+  });
+
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-emerald-400 selection:text-black relative overflow-hidden font-sans transition-colors duration-500">
+      {/* Sample Portfolios Modal */}
+      <SamplePortfoliosModal
+        isOpen={isSampleModalOpen}
+        onClose={() => setIsSampleModalOpen(false)}
+      />
+
       {/* Dynamic Background Ambient Glows */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[800px] h-[550px] bg-emerald-500/10 dark:bg-emerald-500/15 rounded-full blur-[160px]" />
@@ -35,9 +54,9 @@ export default function LandingPage() {
       </div>
 
       {/* Global Navbar */}
-      <nav className="sticky top-4 z-50 max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between p-3.5 rounded-2xl bg-card-bg backdrop-blur-2xl border border-border shadow-glass dark:shadow-glass shadow-glass-light transition-all duration-300">
-          <Link href="/" className="flex items-center gap-2.5 pl-2 group">
+      <nav className="sticky top-4 z-50 max-w-6xl mx-auto px-3 sm:px-6">
+        <div className="flex items-center justify-between p-2.5 sm:p-3.5 rounded-2xl bg-card-bg backdrop-blur-2xl border border-border shadow-glass dark:shadow-glass shadow-glass-light transition-all duration-300">
+          <Link href="/" className="flex items-center gap-2 pl-1 sm:pl-2 group shrink-0">
             <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-300 flex items-center justify-center text-black font-black text-sm shadow-glass-glow">
               P
             </div>
@@ -50,27 +69,33 @@ export default function LandingPage() {
             <a href="#features" className="hover:text-emerald-600 dark:hover:text-[#00FF87] transition-colors">
               Features
             </a>
+            <a href="#templates" className="hover:text-emerald-600 dark:hover:text-[#00FF87] transition-colors">
+              Templates
+            </a>
             <a href="#showcase" className="hover:text-emerald-600 dark:hover:text-[#00FF87] transition-colors">
               Optics & 3D Displays
             </a>
             <a href="#pricing" className="hover:text-emerald-600 dark:hover:text-[#00FF87] transition-colors">
               Pricing
             </a>
-            <Link href="/kristos" className="text-emerald-700 dark:text-[#00FF87] hover:underline flex items-center gap-1 font-bold">
+            <button
+              onClick={() => setIsSampleModalOpen(true)}
+              className="text-emerald-700 dark:text-[#00FF87] hover:underline flex items-center gap-1 font-bold cursor-pointer"
+            >
               <span>Live Showcase</span> <ArrowUpRight className="w-3.5 h-3.5" />
-            </Link>
+            </button>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0 pr-0.5 sm:pr-1">
             <ThemeToggle />
-            <Link href="/login">
-              <GlassButton variant="ghost" size="sm" className="text-xs font-bold">
+            <Link href="/login" className="hidden sm:inline-flex">
+              <GlassButton variant="ghost" size="sm" className="text-xs font-bold px-3">
                 Log In
               </GlassButton>
             </Link>
-            <Link href="/register">
-              <GlassButton variant="primary" size="sm" glow className="text-xs font-bold">
-                Claim Handle <ChevronRight className="w-3.5 h-3.5" />
+            <Link href="/register" className="shrink-0">
+              <GlassButton variant="primary" size="sm" glow className="text-xs font-bold px-3.5 py-1.5 sm:px-4 sm:py-2">
+                <span>Claim Handle</span> <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
               </GlassButton>
             </Link>
           </div>
@@ -109,11 +134,15 @@ export default function LandingPage() {
                 Start Free (200MB Included) <ChevronRight className="w-4 h-4 ml-1" />
               </GlassButton>
             </Link>
-            <Link href="/kristos" className="w-full sm:w-auto">
-              <GlassButton variant="glass" size="lg" className="w-full sm:w-auto text-sm font-bold">
-                <Eye className="w-4 h-4 mr-2 text-emerald-600 dark:text-[#00FF87]" /> Explore Kristos Vance Portfolio
-              </GlassButton>
-            </Link>
+            <GlassButton
+              variant="glass"
+              size="lg"
+              onClick={() => setIsSampleModalOpen(true)}
+              className="w-full sm:w-auto text-sm font-bold cursor-pointer group"
+            >
+              <Layers className="w-4 h-4 mr-2 text-emerald-600 dark:text-[#00FF87] group-hover:scale-110 transition-transform" />
+              Preview Sample Portfolios
+            </GlassButton>
           </div>
         </ScrollReveal>
 
@@ -199,6 +228,162 @@ export default function LandingPage() {
               </div>
             </div>
           </PerspectiveTilt>
+        </ScrollReveal>
+      </section>
+
+      {/* PRESETS & TEMPLATES SHOWCASE SECTION */}
+      <section id="templates" className="max-w-6xl mx-auto px-4 sm:px-6 pb-28 relative z-10 space-y-12">
+        <ScrollReveal animation="fade-up">
+          <div className="text-center space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-400/40 text-emerald-800 dark:text-[#00FF87] text-xs font-mono font-bold">
+              <Layers className="w-3.5 h-3.5" />
+              <span>5 BESPOKE DESIGN PRESETS</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-foreground font-display">
+              Unique Portfolios for Every Discipline
+            </h2>
+            <p className="text-sm sm:text-base text-zinc-700 dark:text-zinc-300 max-w-2xl mx-auto font-normal">
+              Click to preview live sample portfolios engineered with custom display optics, typography pairings, and glow accents. Every layout is 100% customizable in your personal editor.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        {/* Filter Pills */}
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+          {[
+            { id: 'all', label: 'All Templates (5)' },
+            { id: 'crystal_prism', label: '3D Crystal Prism' },
+            { id: 'side_swipe', label: 'Fluid Side-Swipe' },
+            { id: 'carousel_3d', label: '3D Carousel' },
+            { id: 'bento_grid', label: 'Editorial Bento Grid' },
+          ].map((f) => (
+            <button
+              key={f.id}
+              onClick={() => setSelectedTemplateFilter(f.id)}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                selectedTemplateFilter === f.id
+                  ? 'bg-emerald-500 text-black shadow-glass-glow'
+                  : 'bg-card-bg text-foreground hover:bg-black/5 dark:hover:bg-white/10 border border-border'
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Templates Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredTemplates.map((template, idx) => (
+            <ScrollReveal key={template.id} animation="fade-up" delayMs={idx * 80}>
+              <PerspectiveTilt>
+                <GlassCard intensity="high" className="p-5 space-y-4 h-full flex flex-col justify-between group hover:border-emerald-500/50 transition-all duration-300">
+                  <div className="space-y-3.5">
+                    {/* Top Row: Avatar & Identity */}
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-12 h-12 rounded-2xl overflow-hidden border-2 p-0.5 relative shrink-0 shadow-md"
+                        style={{ borderColor: template.accentColor }}
+                      >
+                        <img
+                          src={template.avatarUrl}
+                          alt={template.name}
+                          className="w-full h-full object-cover rounded-[10px]"
+                        />
+                      </div>
+                      <div className="space-y-0.5 flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-base font-bold text-foreground truncate font-display">
+                            {template.name}
+                          </h3>
+                          <span
+                            className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border uppercase"
+                            style={{
+                              color: template.accentColor,
+                              borderColor: `${template.accentColor}40`,
+                              backgroundColor: `${template.accentColor}15`,
+                            }}
+                          >
+                            {template.themeName}
+                          </span>
+                        </div>
+                        <p className="text-xs text-zinc-600 dark:text-zinc-300 font-medium truncate">{template.headline}</p>
+                      </div>
+                    </div>
+
+                    {/* Featured Thumbnail */}
+                    <div className="relative aspect-[16/9] rounded-xl overflow-hidden bg-black/60 border border-border">
+                      <img
+                        src={template.featuredProjectImage}
+                        alt={template.featuredProjectTitle}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
+                        <span className="text-xs font-bold text-white truncate">
+                          {template.featuredProjectTitle}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Template Specs */}
+                    <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
+                      <div className="p-2 rounded-lg bg-black/5 dark:bg-black/40 border border-border space-y-0.5">
+                        <span className="text-[10px] text-zinc-500 dark:text-zinc-400 block font-sans">Display Mode</span>
+                        <span className="font-bold text-foreground flex items-center gap-1.5 truncate">
+                          <Layout className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                          {template.displayModeLabel}
+                        </span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-black/5 dark:bg-black/40 border border-border space-y-0.5">
+                        <span className="text-[10px] text-zinc-500 dark:text-zinc-400 block font-sans">Font System</span>
+                        <span className="font-bold text-foreground flex items-center gap-1.5 truncate">
+                          <Type className="w-3.5 h-3.5 text-cyan-500 shrink-0" />
+                          {template.primaryFont}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="pt-2 flex items-center gap-2">
+                    <Link
+                      href={`/${template.username}`}
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold transition-all shadow-glass-glow"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>Live Portfolio</span>
+                      <ChevronRight className="w-3 h-3" />
+                    </Link>
+                    <Link
+                      href={`/register?template=${template.username}`}
+                      className="px-3 py-2 rounded-xl bg-card-bg hover:bg-black/5 dark:hover:bg-white/10 border border-border text-foreground text-xs font-bold transition-all"
+                    >
+                      Use
+                    </Link>
+                  </div>
+                </GlassCard>
+              </PerspectiveTilt>
+            </ScrollReveal>
+          ))}
+        </div>
+
+        {/* Banner */}
+        <ScrollReveal animation="fade-up">
+          <div className="p-6 rounded-3xl bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-emerald-500/10 border border-emerald-500/30 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <div className="space-y-1">
+              <div className="flex items-center justify-center sm:justify-start gap-2 text-sm font-bold text-emerald-700 dark:text-[#00FF87]">
+                <Sliders className="w-4 h-4" />
+                <span>Fully Modular & 100% Customizable in Studio Editor</span>
+              </div>
+              <p className="text-xs text-zinc-700 dark:text-zinc-300 font-normal max-w-2xl">
+                Every template is merely a starting point. Mix and match display optics, typography pairings, glowing accent colors, and video lightboxes with 1 click in your dashboard.
+              </p>
+            </div>
+            <Link href="/register">
+              <GlassButton variant="primary" size="md" glow className="whitespace-nowrap text-xs font-bold px-6">
+                Create Your Custom Portfolio <ChevronRight className="w-4 h-4 ml-1" />
+              </GlassButton>
+            </Link>
+          </div>
         </ScrollReveal>
       </section>
 
