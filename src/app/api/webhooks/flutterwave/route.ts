@@ -32,8 +32,10 @@ export async function POST(req: NextRequest) {
     const currency = data.currency || 'NGN';
     const email = data.customer?.email?.toLowerCase();
     const userId = data.meta?.userId;
-    const username = data.meta?.username;
-    const tier: TierType = (data.meta?.tier as TierType) || (amount <= 2500 ? 'pro_2k' : 'elite_5k');
+    const pricing = Database.getPricingConfig();
+    const tier: TierType =
+      (data.meta?.tier as TierType) ||
+      (amount < pricing.elite_5k.priceNgn ? 'pro_2k' : 'elite_5k');
 
     const isSuccessful = status === 'successful' || status === 'completed' || event === 'charge.completed';
 

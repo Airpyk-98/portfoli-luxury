@@ -11,9 +11,9 @@
     ]
   },
   "pro_2k": {
-    "priceNgn": 2500,
-    "maxVideos": 12,
-    "maxPhotos": 80,
+    "priceNgn": 2000,
+    "maxVideos": 10,
+    "maxPhotos": 70,
     "storageQuotaBytes": 1073741824,
     "subdomainAllowed": false,
     "displayModesAllowed": [
@@ -23,7 +23,7 @@
     ]
   },
   "elite_5k": {
-    "priceNgn": 5500,
+    "priceNgn": 5000,
     "maxVideos": 9999,
     "maxPhotos": 99999,
     "storageQuotaBytes": 2147483648,

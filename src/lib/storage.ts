@@ -766,6 +766,15 @@ export class Database {
       ...config,
     };
     writeJsonFile('pricing.json', updated);
+
+    // Sync to Neon
+    try {
+      const { saveNeonPricing } = require('./neon');
+      saveNeonPricing(updated).catch((err: any) => console.warn('Neon pricing sync notice:', err));
+    } catch (e) {
+      // ignore
+    }
+
     return updated;
   }
 

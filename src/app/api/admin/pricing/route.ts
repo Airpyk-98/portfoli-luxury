@@ -21,21 +21,13 @@ export async function GET(req: Request) {
   const cookieStore = await cookies();
   const token = cookieStore.get('portfoli_session')?.value;
 
-  // Allow public access ONLY to public pricing values for the pricing page
-  const { searchParams } = new URL(req.url);
-  const isPublicQuery = searchParams.get('public') === 'true';
-
-  if (isPublicQuery) {
-    const pricing = Database.getPricingConfig();
-    return NextResponse.json({ pricing });
-  }
-
-  // Admin Telemetry & Full Config requires Admin Authorization
-  if (!isAuthorizedAdmin(req, token)) {
-    return NextResponse.json({ error: 'Master Admin authorization required.' }, { status: 403 });
-  }
-
   const pricing = Database.getPricingConfig();
+
+  // If not admin, return public pricing
+  if (!isAuthorizedAdmin(req, token)) {
+    return NextResponse.json({ success: true, pricing });
+  }
+
   const users = Database.getUsers();
 
   // Subscriptions telemetry
@@ -56,6 +48,7 @@ export async function GET(req: Request) {
   });
 
   return NextResponse.json({
+    success: true,
     pricing,
     telemetry: {
       totalUsers,
