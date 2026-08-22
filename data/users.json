@@ -1,7 +1,7 @@
 [
   {
     "id": "user_kristos_01",
-    "email": "kristos@portfoli.site",
+    "email": "kristos@portfoli.me",
     "username": "kristos",
     "name": "Kristos Vance",
     "role": "user",
@@ -9,10 +9,7 @@
       "tier": "elite_5k",
       "active": true,
       "amountPaid": 5000,
-      "currency": "NGN",
-      "startDate": "2026-08-22T18:21:52.879Z",
-      "endDate": "2027-08-22T18:21:52.879Z",
-      "autoRenew": true
+      "currency": "NGN"
     },
     "portfolio": {
       "id": "port_kristos_01",
@@ -26,7 +23,7 @@
       "location": "Lagos & San Francisco",
       "availableForHire": true,
       "availabilityText": "Available for Select Q3 Advisory & Builds",
-      "emailContact": "kristos@portfoli.site",
+      "emailContact": "kristos@portfoli.me",
       "phoneContact": "+234 812 345 6789",
       "calendlyUrl": "https://calendly.com",
       "theme": {
@@ -137,7 +134,7 @@
   },
   {
     "id": "user_elena_01",
-    "email": "elena@portfoli.site",
+    "email": "elena@portfoli.me",
     "username": "elena",
     "name": "Elena Rostova",
     "role": "user",
@@ -145,10 +142,7 @@
       "tier": "elite_5k",
       "active": true,
       "amountPaid": 5000,
-      "currency": "NGN",
-      "startDate": "2026-08-22T18:21:52.879Z",
-      "endDate": "2027-08-22T18:21:52.879Z",
-      "autoRenew": true
+      "currency": "NGN"
     },
     "portfolio": {
       "id": "port_elena_01",
@@ -162,7 +156,7 @@
       "location": "Paris & London",
       "availableForHire": true,
       "availabilityText": "Available for Select Q3 Advisory & Builds",
-      "emailContact": "elena@portfoli.site",
+      "emailContact": "elena@portfoli.me",
       "phoneContact": "+234 812 345 6789",
       "calendlyUrl": "https://calendly.com",
       "theme": {
@@ -287,7 +281,7 @@
   },
   {
     "id": "user_marcus_01",
-    "email": "marcus@portfoli.site",
+    "email": "marcus@portfoli.me",
     "username": "marcus",
     "name": "Marcus Thorne",
     "role": "user",
@@ -295,10 +289,7 @@
       "tier": "elite_5k",
       "active": true,
       "amountPaid": 5000,
-      "currency": "NGN",
-      "startDate": "2026-08-22T18:21:52.879Z",
-      "endDate": "2027-08-22T18:21:52.879Z",
-      "autoRenew": true
+      "currency": "NGN"
     },
     "portfolio": {
       "id": "port_marcus_01",
@@ -312,7 +303,7 @@
       "location": "London & Los Angeles",
       "availableForHire": true,
       "availabilityText": "Available for Select Q3 Advisory & Builds",
-      "emailContact": "marcus@portfoli.site",
+      "emailContact": "marcus@portfoli.me",
       "phoneContact": "+234 812 345 6789",
       "calendlyUrl": "https://calendly.com",
       "theme": {
@@ -411,7 +402,7 @@
   },
   {
     "id": "user_sora_01",
-    "email": "sora@portfoli.site",
+    "email": "sora@portfoli.me",
     "username": "sora",
     "name": "Dr. Sora Tanaka",
     "role": "user",
@@ -419,10 +410,7 @@
       "tier": "elite_5k",
       "active": true,
       "amountPaid": 5000,
-      "currency": "NGN",
-      "startDate": "2026-08-22T18:21:52.879Z",
-      "endDate": "2027-08-22T18:21:52.879Z",
-      "autoRenew": true
+      "currency": "NGN"
     },
     "portfolio": {
       "id": "port_sora_01",
@@ -436,7 +424,7 @@
       "location": "Tokyo & Zurich",
       "availableForHire": true,
       "availabilityText": "Available for Select Q3 Advisory & Builds",
-      "emailContact": "sora@portfoli.site",
+      "emailContact": "sora@portfoli.me",
       "phoneContact": "+234 812 345 6789",
       "calendlyUrl": "https://calendly.com",
       "theme": {
@@ -534,7 +522,7 @@
   },
   {
     "id": "user_zara_01",
-    "email": "zara@portfoli.site",
+    "email": "zara@portfoli.me",
     "username": "zara",
     "name": "Zara Sterling",
     "role": "user",
@@ -542,10 +530,7 @@
       "tier": "elite_5k",
       "active": true,
       "amountPaid": 5000,
-      "currency": "NGN",
-      "startDate": "2026-08-22T18:21:52.879Z",
-      "endDate": "2027-08-22T18:21:52.879Z",
-      "autoRenew": true
+      "currency": "NGN"
     },
     "portfolio": {
       "id": "port_zara_01",
@@ -559,7 +544,7 @@
       "location": "New York & Singapore",
       "availableForHire": true,
       "availabilityText": "Available for Select Q3 Advisory & Builds",
-      "emailContact": "zara@portfoli.site",
+      "emailContact": "zara@portfoli.me",
       "phoneContact": "+234 812 345 6789",
       "calendlyUrl": "https://calendly.com",
       "theme": {
@@ -657,7 +642,7 @@
   },
   {
     "id": "user_admin_01",
-    "email": "admin@portfoli.site",
+    "email": "admin@portfoli.me",
     "username": "admin",
     "name": "Portfoli Master Admin",
     "role": "admin",
@@ -665,10 +650,7 @@
       "tier": "elite_5k",
       "active": true,
       "amountPaid": 0,
-      "currency": "NGN",
-      "startDate": "2026-08-22T18:21:52.879Z",
-      "endDate": "2027-08-22T18:21:52.879Z",
-      "autoRenew": true
+      "currency": "NGN"
     },
     "portfolio": {
       "id": "port_kristos_01",
@@ -682,7 +664,7 @@
       "location": "Lagos & San Francisco",
       "availableForHire": true,
       "availabilityText": "Available for Select Q3 Advisory & Builds",
-      "emailContact": "kristos@portfoli.site",
+      "emailContact": "kristos@portfoli.me",
       "phoneContact": "+234 812 345 6789",
       "calendlyUrl": "https://calendly.com",
       "theme": {
@@ -789,5 +771,54 @@
       "updatedAt": "2026-08-22T08:00:00.000Z"
     },
     "passwordHash": "$2a$10$YourHashedPasswordHerePlaceholder"
+  },
+  {
+    "id": "user_1787428555140_87ve2",
+    "email": "testuser_1787428546652@example.com",
+    "username": "testuser_1787428546652",
+    "passwordHash": "40ad26750b116c5a704a55ce26c0ea90:97b7178ef1f81dec4bdcbc1453141cc9d829060b76684f44cc8c3f2241c25a7e6606759cb6bd21ae9cfac780d4f0d04af7b66c67fa5466beb3d9d123a75e721e",
+    "name": "Test User Cyber",
+    "role": "user",
+    "subscription": {
+      "tier": "free",
+      "startDate": "2026-08-22T19:55:55.140Z",
+      "endDate": "2027-08-22T19:55:55.140Z",
+      "active": true,
+      "autoRenew": false,
+      "amountPaid": 0,
+      "currency": "NGN"
+    },
+    "portfolio": {
+      "id": "port_user_1787428555140_87ve2",
+      "userId": "user_1787428555140_87ve2",
+      "username": "testuser_1787428546652",
+      "displayName": "Test User Cyber",
+      "headline": "Creative Professional & Builder",
+      "bio": "Crafting high-impact digital experiences and products.",
+      "availableForHire": true,
+      "availabilityText": "Open for Opportunities",
+      "emailContact": "testuser_1787428546652@example.com",
+      "theme": {
+        "mode": "dark",
+        "primaryFont": "Syne",
+        "secondaryFont": "Plus Jakarta Sans",
+        "accentColor": "#00FF87",
+        "secondaryAccent": "#FFFFFF",
+        "glassIntensity": "high",
+        "displayMode": "crystal_prism",
+        "sectionScrollEffect": "reveal",
+        "typographyReveal": "stagger-glow",
+        "showAvailableBadge": true
+      },
+      "socials": [],
+      "projects": [],
+      "services": [],
+      "viewsCount": 0,
+      "createdAt": "2026-08-22T19:55:55.140Z",
+      "updatedAt": "2026-08-22T19:55:55.140Z"
+    },
+    "storageUsedBytes": 0,
+    "createdAt": "2026-08-22T19:55:55.140Z",
+    "updatedAt": "2026-08-22T19:55:55.141Z"
   }
 ]

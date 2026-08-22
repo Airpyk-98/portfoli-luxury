@@ -1,0 +1,20 @@
+[
+  {
+    "id": "tx_1787428559555",
+    "txRef": "portfoli_testuser_1787428546652_1787428559553_2oyxk",
+    "userId": "user_1787428555140_87ve2",
+    "username": "testuser_1787428546652",
+    "userEmail": "testuser_1787428546652@example.com",
+    "amount": 5000,
+    "currency": "NGN",
+    "tier": "elite_5k",
+    "status": "pending",
+    "paymentType": "flutterwave_v4",
+    "createdAt": "2026-08-22T19:55:59.555Z",
+    "metadata": {
+      "environment": "live",
+      "tier": "elite_5k",
+      "userName": "Test User Cyber"
+    }
+  }
+]
