@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { SAMPLE_TEMPLATES, SampleTemplateInfo } from '@/lib/sample-templates';
+import { TemplateCardPreview } from '@/components/displays/template-card-preview';
 import { GlassCard } from '@/components/ui/glass-card';
 import { GlassButton } from '@/components/ui/glass-button';
 import {
@@ -145,19 +146,11 @@ export function SamplePortfoliosModal({ isOpen, onClose }: Props) {
                         </div>
                       </div>
 
-                      {/* Featured Thumbnail */}
-                      <div className="relative aspect-[16/9] rounded-xl overflow-hidden bg-black/60 border border-white/10">
-                        <img
-                          src={template.featuredProjectImage}
-                          alt={template.featuredProjectTitle}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
-                          <span className="text-xs font-bold text-white truncate">
-                            {template.featuredProjectTitle}
-                          </span>
-                        </div>
-                      </div>
+                      {/* DYNAMIC LIVE MULTI-PROJECT PREVIEW */}
+                      <TemplateCardPreview
+                        template={template}
+                        cardIndex={0}
+                      />
 
                       {/* Template Specs */}
                       <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
