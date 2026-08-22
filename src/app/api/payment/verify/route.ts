@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
     }
 
-    const settings = getPaymentSettings();
+    const settings = await getPaymentSettingsAsync();
     const selectedTier: TierType = tier === 'pro_2k' ? 'pro_2k' : 'elite_5k';
     const pricing = await Database.getPricingConfigAsync();
     const amount = selectedTier === 'pro_2k' ? pricing.pro_2k.priceNgn : pricing.elite_5k.priceNgn;
@@ -74,20 +74,16 @@ export async function POST(req: NextRequest) {
           });
 
           const verifyData = await verifyRes.json();
-          if (verifyData.status === 'success' && verifyData.data?.status === 'successful') {
+          if (verifyData.status === 'success' && (verifyData.data?.status === 'successful' || verifyData.data?.status === 'completed')) {
             isVerified = true;
             flwRef = verifyData.data.flw_ref || transactionId;
+          } else {
+            console.warn('Flutterwave verification rejected:', verifyData);
           }
         } catch (err) {
           console.error('Flutterwave direct verification error:', err);
         }
-      } else {
-        // No credentials configured — sandbox/dev flow
-        isVerified = true;
       }
-    } else {
-      // No transactionId — sandbox / direct return flow
-      isVerified = true;
     }
 
     if (isVerified) {

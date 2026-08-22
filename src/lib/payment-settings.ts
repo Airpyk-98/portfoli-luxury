@@ -139,8 +139,42 @@ export function savePaymentSettings(settings: Partial<PaymentGatewaySettings>): 
   return updated;
 }
 
-export function getMaskedPaymentSettings() {
-  const s = getPaymentSettings();
+export async function getPaymentSettingsAsync(): Promise<PaymentGatewaySettings> {
+  let settings = getPaymentSettings();
+  try {
+    const { getNeonPaymentSettings } = require('./neon');
+    const dbSettings = await getNeonPaymentSettings();
+    if (dbSettings) {
+      settings = { ...settings, ...dbSettings };
+    }
+  } catch (e) {}
+
+  // Override with environment variables if available
+  const finalSettings: PaymentGatewaySettings = {
+    ...settings,
+    secretKey: process.env.FLUTTERWAVE_SECRET_KEY || process.env.FLW_SECRET_KEY || settings.secretKey,
+    publicKey: process.env.FLUTTERWAVE_PUBLIC_KEY || process.env.FLW_PUBLIC_KEY || settings.publicKey,
+    clientId: process.env.FLUTTERWAVE_CLIENT_ID || process.env.FLW_CLIENT_ID || settings.clientId,
+    clientSecret: process.env.FLUTTERWAVE_CLIENT_SECRET || process.env.FLW_CLIENT_SECRET || settings.clientSecret,
+    encryptionKey: process.env.FLUTTERWAVE_ENCRYPTION_KEY || process.env.FLW_ENCRYPTION_KEY || settings.encryptionKey,
+    webhookSecretHash: process.env.FLUTTERWAVE_WEBHOOK_HASH || settings.webhookSecretHash,
+  };
+
+  globalThis.__portfoli_payment_settings = finalSettings;
+  return finalSettings;
+}
+
+export async function savePaymentSettingsAsync(settings: Partial<PaymentGatewaySettings>): Promise<PaymentGatewaySettings> {
+  const updated = savePaymentSettings(settings);
+  try {
+    const { saveNeonPaymentSettings } = require('./neon');
+    await saveNeonPaymentSettings(updated);
+  } catch (e) {}
+  return updated;
+}
+
+export function getMaskedPaymentSettings(customSettings?: PaymentGatewaySettings) {
+  const s = customSettings || getPaymentSettings();
   const mask = (str: string) => {
     if (!str || str.length <= 8) return str ? '********' : '';
     return str.slice(0, 4) + '••••••••' + str.slice(-4);
@@ -162,6 +196,11 @@ export function getMaskedPaymentSettings() {
     hasConfiguredSecret: Boolean(s.secretKey || s.clientSecret),
     updatedAt: s.updatedAt,
   };
+}
+
+export async function getMaskedPaymentSettingsAsync() {
+  const s = await getPaymentSettingsAsync();
+  return getMaskedPaymentSettings(s);
 }
 
 export function getTransactions(): PaymentTransaction[] {

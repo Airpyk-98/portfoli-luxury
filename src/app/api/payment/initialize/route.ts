@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
     }
 
     const txRef = `portfoli_${user.username}_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-    const settings = getPaymentSettings();
+    const settings = await getPaymentSettingsAsync();
 
     const host = req.headers.get('host') || 'portfoli.site';
     const proto = host.includes('localhost') ? 'http' : 'https';
@@ -119,6 +119,8 @@ export async function POST(req: NextRequest) {
       const v4Token = await getV4OAuthToken(settings.clientId, settings.clientSecret);
       if (v4Token) {
         authHeader = `Bearer ${v4Token}`;
+      } else {
+        console.warn('Could not exchange Client ID and Secret for Flutterwave v4 access token.');
       }
     }
 
@@ -127,74 +129,70 @@ export async function POST(req: NextRequest) {
       authHeader = `Bearer ${settings.secretKey.trim()}`;
     }
 
-    // 3. Initiate payment with Flutterwave API
-    if (authHeader) {
-      try {
-        const flwResponse = await fetch('https://api.flutterwave.com/v3/payments', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: authHeader,
-          },
-          body: JSON.stringify({
-            tx_ref: txRef,
-            amount: amount,
-            currency: 'NGN',
-            redirect_url: redirectUrl,
-            meta: {
-              userId: user.id,
-              username: user.username,
-              tier: selectedTier,
-            },
-            customer: {
-              email: user.email,
-              name: user.name || user.displayName || user.username,
-            },
-            customizations: {
-              title: 'portfoli — Luxury Portfolio Subscription',
-              description: `1-Year Access to ${selectedTier === 'elite_5k' ? 'Elite 5GB' : 'Pro 1GB'} Architecture & Custom Subdomain`,
-              logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&auto=format&fit=crop&q=80',
-            },
-          }),
-        });
-
-        const flwData = await flwResponse.json();
-
-        if (flwData.status === 'success' && flwData.data?.link) {
-          return NextResponse.json({
-            success: true,
-            checkoutUrl: flwData.data.link,
-            txRef,
-            amount,
-            currency: 'NGN',
-            tier: selectedTier,
-            v4Authenticated: Boolean(settings.clientId && settings.clientSecret),
-          });
-        } else {
-          console.warn('Flutterwave payments API response:', flwData);
-          if (flwData.message) {
-            return NextResponse.json({
-              success: false,
-              message: `Flutterwave API: ${flwData.message}`,
-              details: flwData,
-            }, { status: 400 });
-          }
-        }
-      } catch (flwErr: any) {
-        console.error('Error connecting to Flutterwave API:', flwErr);
-      }
+    if (!authHeader) {
+      return NextResponse.json({
+        success: false,
+        message: 'Flutterwave credentials not configured. Please save your Client ID and Client Secret in the Admin Panel (Settings > Payment Gateway) or set FLUTTERWAVE_CLIENT_ID and FLUTTERWAVE_CLIENT_SECRET environment variables.',
+      }, { status: 400 });
     }
 
-    // Return redirect fallback for local development or pending keys configuration
-    return NextResponse.json({
-      success: true,
-      checkoutUrl: redirectUrl,
-      txRef,
-      amount,
-      currency: 'NGN',
-      tier: selectedTier,
-      isSimulation: !authHeader,
-    });
+    // 3. Initiate payment with Flutterwave API
+    try {
+      const flwResponse = await fetch('https://api.flutterwave.com/v3/payments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: authHeader,
+        },
+        body: JSON.stringify({
+          tx_ref: txRef,
+          amount: amount,
+          currency: 'NGN',
+          redirect_url: redirectUrl,
+          meta: {
+            userId: user.id,
+            username: user.username,
+            tier: selectedTier,
+          },
+          customer: {
+            email: user.email,
+            name: user.name || user.displayName || user.username,
+          },
+          customizations: {
+            title: 'portfoli — Luxury Portfolio Subscription',
+            description: `1-Year Access to ${selectedTier === 'elite_5k' ? 'Elite 5GB' : 'Pro 1GB'} Architecture & Custom Subdomain`,
+            logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&auto=format&fit=crop&q=80',
+          },
+        }),
+      });
+
+      const flwData = await flwResponse.json();
+
+      if (flwData.status === 'success' && flwData.data?.link) {
+        return NextResponse.json({
+          success: true,
+          checkoutUrl: flwData.data.link,
+          txRef,
+          amount,
+          currency: 'NGN',
+          tier: selectedTier,
+          v4Authenticated: Boolean(settings.clientId && settings.clientSecret),
+        });
+      } else {
+        console.error('Flutterwave payments API error response:', flwData);
+        return NextResponse.json({
+          success: false,
+          message: flwData.message || 'Flutterwave failed to generate checkout link. Please check credentials.',
+          details: flwData,
+        }, { status: 400 });
+      }
+    } catch (flwErr: any) {
+      console.error('Error connecting to Flutterwave API:', flwErr);
+      return NextResponse.json({
+        success: false,
+        message: `Connection to Flutterwave API failed: ${flwErr.message}`,
+      }, { status: 500 });
+    }
   } catch (err: any) {
     console.error('Payment initialization failed:', err);
     return NextResponse.json(
