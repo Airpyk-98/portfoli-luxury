@@ -98,9 +98,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       media: newMediaItem,
-      message: isCompressed
-        ? 'Video compressed via WebM pipeline and saved to Hugging Face Hub.'
-        : 'File uploaded directly to Hugging Face Hub.',
+      message: 'File optimized and uploaded to cloud storage.',
     });
   } catch (err: any) {
     console.error('Media upload error:', err);

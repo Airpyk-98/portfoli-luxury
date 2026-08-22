@@ -45,3 +45,5 @@ rename_plan.json
 extracted_pdf_text.txt
 *.py
 
+
+.vercel

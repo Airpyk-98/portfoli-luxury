@@ -214,7 +214,7 @@ export default function PricingPage() {
                       <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> 3D Crystal Prism Display Mode
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Priority Kaggle WebM Video Pipeline
+                      <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Priority 4K & Ultra-HD Media Engine
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Zero &apos;Powered by portfoli&apos; Badge

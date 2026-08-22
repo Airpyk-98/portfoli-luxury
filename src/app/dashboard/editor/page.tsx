@@ -442,7 +442,7 @@ export default function StudioEditorPage() {
                           onChange={(e) => handleFileUpload(e, proj.id, 'video')}
                         />
                         <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-500/40 text-xs font-semibold transition-all">
-                          <Video className="w-3.5 h-3.5 text-emerald-400" /> Upload Video (HF/WebM)
+                          <Video className="w-3.5 h-3.5 text-emerald-400" /> Upload Video
                         </span>
                       </label>
                     </div>
@@ -451,7 +451,7 @@ export default function StudioEditorPage() {
                   {uploadingMediaForProj === proj.id && (
                     <div className="p-3 rounded-xl bg-emerald-950/50 border border-emerald-400/40 text-xs text-emerald-300 flex items-center gap-2 animate-pulse">
                       <Film className="w-4 h-4 text-emerald-400" />
-                      <span>Processing media upload to Hugging Face Hub (Kaggle WebM pipeline active if &gt;100MB)...</span>
+                      <span>Optimizing and uploading media to cloud storage...</span>
                     </div>
                   )}
 

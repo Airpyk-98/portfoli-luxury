@@ -303,7 +303,7 @@ export default function AdminControlPage() {
                   <div className="text-3xl font-black font-mono text-foreground">
                     {formatBytes(telemetry.totalStorageUsedBytes)}
                   </div>
-                  <div className="text-[11px] text-zinc-600 dark:text-zinc-400">HF Hub & Kaggle video cache</div>
+                  <div className="text-[11px] text-zinc-600 dark:text-zinc-400">Global Cloud & Media Cache</div>
                 </GlassCard>
               </PerspectiveTilt>
             </ScrollReveal>

@@ -81,7 +81,7 @@ export default function LandingPage() {
       <section className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-24 text-center space-y-8">
         <ScrollReveal animation="scale-up" delayMs={50}>
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-400/50 text-emerald-800 dark:text-emerald-300 text-xs font-bold backdrop-blur-xl shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-[#00FF87]" />
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-sm" />
             <span>Next-Gen Glassmorphic Portfolio Architecture</span>
           </div>
         </ScrollReveal>
@@ -189,9 +189,9 @@ export default function LandingPage() {
                     </GlassCard>
 
                     <GlassCard intensity="high" className="p-5 space-y-2">
-                      <div className="text-xs font-mono text-emerald-800 dark:text-[#00FF87] uppercase font-bold">Storage Pipeline</div>
+                      <div className="text-xs font-mono text-emerald-800 dark:text-[#00FF87] uppercase font-bold">Ultra-Fast Media Delivery</div>
                       <p className="text-xs text-zinc-700 dark:text-zinc-200 font-normal leading-relaxed">
-                        Direct Hugging Face Hub dataset backend with automatic Kaggle WebM compression for videos &gt; 100MB.
+                        Global edge storage pipeline with instant streaming optimization for 4K video and lossless high-resolution images.
                       </p>
                     </GlassCard>
                   </div>
@@ -242,8 +242,8 @@ export default function LandingPage() {
             },
             {
               icon: Zap,
-              title: 'HF Hub & Kaggle Pipeline',
-              desc: 'Large video uploads exceeding 100MB are compressed to high-fidelity WebM VP9, saving bandwidth while retaining crisp visual quality.',
+              title: 'High-Performance Media Engine',
+              desc: 'Automatic multi-bitrate video compression and ultra-fast global CDN delivery for crystal-clear playback without buffering.',
             },
             {
               icon: ShieldCheck,
@@ -399,7 +399,7 @@ export default function LandingPage() {
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> 3D Crystal Prism Display Mode
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Priority Kaggle WebM Video Pipeline
+                    <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Priority 4K & Ultra-HD Media Engine
                   </li>
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Zero &apos;Powered by portfoli&apos; Badge
@@ -427,9 +427,6 @@ export default function LandingPage() {
           <div className="flex items-center gap-6 font-semibold">
             <Link href="/pricing" className="hover:text-emerald-600 dark:hover:text-[#00FF87] transition-colors">
               Pricing & Tiers
-            </Link>
-            <Link href="/admin" className="hover:text-emerald-600 dark:hover:text-[#00FF87] transition-colors">
-              Admin Portal
             </Link>
             <Link href="/login" className="hover:text-emerald-600 dark:hover:text-[#00FF87] transition-colors">
               Sign In
