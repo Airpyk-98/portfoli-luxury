@@ -382,3 +382,34 @@ export async function saveNeonInquiry(inquiry: any): Promise<any> {
     return inquiry;
   }
 }
+
+/**
+ * Payment Gateway Settings on Neon
+ */
+export async function getNeonPaymentSettings(): Promise<any | null> {
+  if (!sql) return null;
+  try {
+    await initNeonSchema();
+    const rows = await sql`SELECT value FROM settings WHERE key = 'payment-settings' LIMIT 1;`;
+    if (!rows || rows.length === 0) return null;
+    return rows[0].value;
+  } catch (err) {
+    return null;
+  }
+}
+
+export async function saveNeonPaymentSettings(settings: any): Promise<any> {
+  if (!sql) return settings;
+  try {
+    await initNeonSchema();
+    await sql`
+      INSERT INTO settings (key, value, updated_at)
+      VALUES ('payment-settings', ${JSON.stringify(settings)}, NOW())
+      ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW();
+    `;
+    return settings;
+  } catch (err) {
+    console.error('Neon saveNeonPaymentSettings error:', err);
+    return settings;
+  }
+}

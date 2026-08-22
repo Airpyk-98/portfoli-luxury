@@ -20,12 +20,12 @@ export async function POST(req: Request) {
     }
 
     // Check existing username or email
-    const existingUser = Database.findUserByUsername(cleanUsername);
+    const existingUser = await Database.findUserByUsernameAsync(cleanUsername);
     if (existingUser) {
       return NextResponse.json({ error: 'Username is already taken.' }, { status: 409 });
     }
 
-    const existingEmail = Database.findUserByEmail(email);
+    const existingEmail = await Database.findUserByEmailAsync(email);
     if (existingEmail) {
       return NextResponse.json({ error: 'Email is already registered.' }, { status: 409 });
     }
@@ -85,7 +85,7 @@ export async function POST(req: Request) {
       updatedAt: new Date().toISOString(),
     };
 
-    Database.saveUser(newUser);
+    await Database.saveUserAsync(newUser);
 
     const token = signToken({
       id: newUser.id,

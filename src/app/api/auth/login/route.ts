@@ -11,8 +11,8 @@ export async function POST(req: Request) {
     }
 
     const user =
-      Database.findUserByEmail(login) ||
-      Database.findUserByUsername(login);
+      (await Database.findUserByEmailAsync(login)) ||
+      (await Database.findUserByUsernameAsync(login));
 
     if (!user) {
       return NextResponse.json({ error: 'Invalid credentials.' }, { status: 401 });

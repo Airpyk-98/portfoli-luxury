@@ -10,7 +10,7 @@ export async function GET(req: Request) {
   const username = searchParams.get('username');
 
   if (username) {
-    const user = Database.findUserByUsername(username);
+    const user = await Database.findUserByUsernameAsync(username);
     if (!user || !user.portfolio) {
       return NextResponse.json({ error: 'Portfolio not found.' }, { status: 404 });
     }
@@ -22,7 +22,7 @@ export async function GET(req: Request) {
   const token = cookieStore.get('portfoli_session')?.value;
   if (!token) {
     // No active session — return null user so pricing page redirects to register
-    const demoUser = Database.findUserByUsername('kristos');
+    const demoUser = await Database.findUserByUsernameAsync('kristos');
     return NextResponse.json({
       portfolio: demoUser?.portfolio,
       user: null,
@@ -35,7 +35,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Invalid session' }, { status: 401 });
   }
 
-  const user = Database.findUserById(payload.id);
+  const user = await Database.findUserByIdAsync(payload.id);
   if (!user) {
     return NextResponse.json({ error: 'User not found' }, { status: 404 });
   }

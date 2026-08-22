@@ -67,13 +67,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'User ID is required' }, { status: 400 });
     }
 
-    const user = Database.findUserById(userId);
+    const user = await Database.findUserByIdAsync(userId);
     if (!user) {
       return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
     }
 
     // STRICT SERVER-SIDE PRICING LOOKUP (Non-forgeable)
-    const pricing = Database.getPricingConfig();
+    const pricing = await Database.getPricingConfigAsync();
     let amount = 5000;
     const selectedTier: TierType = tier === 'pro_2k' ? 'pro_2k' : 'elite_5k';
 

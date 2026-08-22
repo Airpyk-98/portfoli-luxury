@@ -237,7 +237,7 @@ export default function DashboardOverviewPage() {
                 </span>
               ) : (
                 <Link
-                  href="/pricing"
+                  href="/dashboard/subscribe?tier=elite_5k"
                   className="text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1 font-medium"
                 >
                   Unlock with Elite (₦5,000/yr) <ArrowUpRight className="w-3 h-3" />

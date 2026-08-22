@@ -135,7 +135,7 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between p-4 rounded-xl bg-black/5 dark:bg-[#0d1712] border border-border text-xs">
             <span className="text-zinc-600 dark:text-zinc-300">Want custom subdomains and unlimited uploads?</span>
             <Link
-              href="/pricing"
+              href="/dashboard/subscribe"
               className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline flex items-center gap-1"
             >
               Upgrade Plan <ArrowUpRight className="w-3.5 h-3.5" />

@@ -60,7 +60,7 @@ export function StorageBar({
         <span>Plan limit: {formatBytes(quotaBytes, 0)}</span>
         {showUpgradeLink && tier !== 'elite_5k' && (
           <Link
-            href="/pricing"
+            href="/dashboard/subscribe"
             className="text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-0.5 transition-colors"
           >
             Upgrade Quota <ArrowUpRight className="w-3 h-3" />

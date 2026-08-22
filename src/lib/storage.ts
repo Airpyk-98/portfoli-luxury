@@ -631,6 +631,15 @@ export class Database {
     writeJsonFile('users.json', users);
   }
 
+  static async findUserByUsernameAsync(username: string): Promise<User | null> {
+    try {
+      const { findNeonUserByUsername } = require('./neon');
+      const neonUser = await findNeonUserByUsername(username);
+      if (neonUser) return neonUser;
+    } catch (e) {}
+    return this.findUserByUsername(username);
+  }
+
   static findUserByUsername(username: string): User | null {
     const users = this.getUsers();
     const found = users.find((u) => u.username.toLowerCase() === username.toLowerCase());
@@ -638,14 +647,41 @@ export class Database {
     return SEED_USERS.find((u) => u.username.toLowerCase() === username.toLowerCase()) || null;
   }
 
+  static async findUserByEmailAsync(email: string): Promise<User | null> {
+    try {
+      const { findNeonUserByEmail } = require('./neon');
+      const neonUser = await findNeonUserByEmail(email);
+      if (neonUser) return neonUser;
+    } catch (e) {}
+    return this.findUserByEmail(email);
+  }
+
   static findUserByEmail(email: string): User | null {
     const users = this.getUsers();
     return users.find((u) => u.email.toLowerCase() === email.toLowerCase()) || null;
   }
 
+  static async findUserByIdAsync(id: string): Promise<User | null> {
+    try {
+      const { findNeonUserById } = require('./neon');
+      const neonUser = await findNeonUserById(id);
+      if (neonUser) return neonUser;
+    } catch (e) {}
+    return this.findUserById(id);
+  }
+
   static findUserById(id: string): User | null {
     const users = this.getUsers();
     return users.find((u) => u.id === id) || null;
+  }
+
+  static async findUserBySubdomainAsync(subdomain: string): Promise<User | null> {
+    try {
+      const { findNeonUserBySubdomain } = require('./neon');
+      const neonUser = await findNeonUserBySubdomain(subdomain);
+      if (neonUser) return neonUser;
+    } catch (e) {}
+    return this.findUserBySubdomain(subdomain);
   }
 
   static findUserBySubdomain(subdomain: string): User | null {
@@ -658,6 +694,15 @@ export class Database {
           u.subscription?.active
       ) || null
     );
+  }
+
+  static async saveUserAsync(user: User): Promise<User> {
+    const updatedUser = this.saveUser(user);
+    try {
+      const { saveNeonUser } = require('./neon');
+      await saveNeonUser(updatedUser);
+    } catch (e) {}
+    return updatedUser;
   }
 
   static saveUser(user: User): User {
@@ -750,6 +795,15 @@ export class Database {
   }
 
   // Dynamic Pricing Config
+  static async getPricingConfigAsync(): Promise<PricingConfig> {
+    try {
+      const { getNeonPricing } = require('./neon');
+      const neonPricing = await getNeonPricing();
+      if (neonPricing) return neonPricing;
+    } catch (e) {}
+    return this.getPricingConfig();
+  }
+
   static getPricingConfig(): PricingConfig {
     return readJsonFile<PricingConfig>('pricing.json', DEFAULT_PRICING);
   }
@@ -757,6 +811,15 @@ export class Database {
   // Alias for compatibility
   static getPricing(): PricingConfig {
     return this.getPricingConfig();
+  }
+
+  static async updatePricingConfigAsync(config: Partial<PricingConfig>): Promise<PricingConfig> {
+    const updated = this.updatePricingConfig(config);
+    try {
+      const { saveNeonPricing } = require('./neon');
+      await saveNeonPricing(updated);
+    } catch (e) {}
+    return updated;
   }
 
   static updatePricingConfig(config: Partial<PricingConfig>): PricingConfig {

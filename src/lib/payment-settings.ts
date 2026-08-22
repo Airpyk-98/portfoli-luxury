@@ -70,30 +70,40 @@ function getTransactionsFilePath(): string {
 }
 
 export function getPaymentSettings(): PaymentGatewaySettings {
+  let settings = DEFAULT_SETTINGS;
+
   if (globalThis.__portfoli_payment_settings) {
-    return globalThis.__portfoli_payment_settings;
+    settings = globalThis.__portfoli_payment_settings;
+  } else {
+    const primaryPath = getSettingsFilePath();
+    const fallbackPath = path.join(LOCAL_DATA_DIR, 'payment-settings.json');
+
+    try {
+      if (fs.existsSync(primaryPath)) {
+        const data = JSON.parse(fs.readFileSync(primaryPath, 'utf8'));
+        settings = { ...DEFAULT_SETTINGS, ...data };
+      } else if (fs.existsSync(fallbackPath)) {
+        const data = JSON.parse(fs.readFileSync(fallbackPath, 'utf8'));
+        settings = { ...DEFAULT_SETTINGS, ...data };
+      }
+    } catch (err) {
+      console.error('Error reading payment settings:', err);
+    }
   }
 
-  const primaryPath = getSettingsFilePath();
-  const fallbackPath = path.join(LOCAL_DATA_DIR, 'payment-settings.json');
+  // Override with environment variables if available
+  const finalSettings: PaymentGatewaySettings = {
+    ...settings,
+    secretKey: process.env.FLUTTERWAVE_SECRET_KEY || process.env.FLW_SECRET_KEY || settings.secretKey,
+    publicKey: process.env.FLUTTERWAVE_PUBLIC_KEY || process.env.FLW_PUBLIC_KEY || settings.publicKey,
+    clientId: process.env.FLUTTERWAVE_CLIENT_ID || process.env.FLW_CLIENT_ID || settings.clientId,
+    clientSecret: process.env.FLUTTERWAVE_CLIENT_SECRET || process.env.FLW_CLIENT_SECRET || settings.clientSecret,
+    encryptionKey: process.env.FLUTTERWAVE_ENCRYPTION_KEY || process.env.FLW_ENCRYPTION_KEY || settings.encryptionKey,
+    webhookSecretHash: process.env.FLUTTERWAVE_WEBHOOK_HASH || settings.webhookSecretHash,
+  };
 
-  try {
-    if (fs.existsSync(primaryPath)) {
-      const data = JSON.parse(fs.readFileSync(primaryPath, 'utf8'));
-      globalThis.__portfoli_payment_settings = { ...DEFAULT_SETTINGS, ...data };
-      return globalThis.__portfoli_payment_settings;
-    }
-    if (fs.existsSync(fallbackPath)) {
-      const data = JSON.parse(fs.readFileSync(fallbackPath, 'utf8'));
-      globalThis.__portfoli_payment_settings = { ...DEFAULT_SETTINGS, ...data };
-      return globalThis.__portfoli_payment_settings;
-    }
-  } catch (err) {
-    console.error('Error reading payment settings:', err);
-  }
-
-  globalThis.__portfoli_payment_settings = DEFAULT_SETTINGS;
-  return DEFAULT_SETTINGS;
+  globalThis.__portfoli_payment_settings = finalSettings;
+  return finalSettings;
 }
 
 export function savePaymentSettings(settings: Partial<PaymentGatewaySettings>): PaymentGatewaySettings {
@@ -119,6 +129,12 @@ export function savePaymentSettings(settings: Partial<PaymentGatewaySettings>): 
   } catch (err) {
     console.error('Error saving payment settings to disk:', err);
   }
+
+  // Sync to Neon
+  try {
+    const { saveNeonPaymentSettings } = require('./neon');
+    saveNeonPaymentSettings(updated).catch((e: any) => console.warn('Neon payment settings sync notice:', e));
+  } catch (e) {}
 
   return updated;
 }

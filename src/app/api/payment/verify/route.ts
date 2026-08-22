@@ -38,14 +38,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'User ID is required' }, { status: 400 });
     }
 
-    const user = Database.findUserById(userId);
+    const user = await Database.findUserByIdAsync(userId);
     if (!user) {
       return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
     }
 
     const settings = getPaymentSettings();
     const selectedTier: TierType = tier === 'pro_2k' ? 'pro_2k' : 'elite_5k';
-    const pricing = Database.getPricingConfig();
+    const pricing = await Database.getPricingConfigAsync();
     const amount = selectedTier === 'pro_2k' ? pricing.pro_2k.priceNgn : pricing.elite_5k.priceNgn;
 
     let isVerified = false;
@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
         user.portfolio.customSubdomain = user.username;
       }
 
-      Database.updateUser(user);
+      await Database.saveUserAsync(user);
 
       saveTransaction({
         id: `tx_${flwRef || Date.now()}`,
