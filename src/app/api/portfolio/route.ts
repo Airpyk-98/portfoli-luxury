@@ -21,11 +21,11 @@ export async function GET(req: Request) {
   const cookieStore = await cookies();
   const token = cookieStore.get('portfoli_session')?.value;
   if (!token) {
-    // Default to 'kristos' demo user if no active session
+    // No active session — return null user so pricing page redirects to register
     const demoUser = Database.findUserByUsername('kristos');
     return NextResponse.json({
       portfolio: demoUser?.portfolio,
-      user: demoUser,
+      user: null,
       isDemo: true,
     });
   }

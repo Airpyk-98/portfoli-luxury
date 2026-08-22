@@ -32,28 +32,16 @@ export default function PricingPage() {
       const portData = await portRes.json();
 
       if (!portData.user) {
+        // Not logged in — go to registration first
         window.location.href = `/register?tier=${tier}`;
         return;
       }
 
-      const payRes = await fetch('/api/payment/initialize', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: portData.user.id,
-          tier,
-        }),
-      });
-
-      const payData = await payRes.json();
-      if (payData.success && payData.checkoutUrl) {
-        window.location.href = payData.checkoutUrl;
-      } else {
-        alert(payData.message || 'Payment initiation failed');
-      }
+      // Logged in — go to subscription confirmation page
+      window.location.href = `/dashboard/subscribe?tier=${tier}`;
     } catch (err: any) {
       console.error(err);
-      alert('Error initiating upgrade: ' + err.message);
+      alert('Error: ' + err.message);
     } finally {
       setUpgradingTier(null);
     }

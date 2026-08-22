@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { GlassCard } from '@/components/ui/glass-card';
 import { GlassButton } from '@/components/ui/glass-button';
 import { GlassInput } from '@/components/ui/glass-input';
@@ -11,7 +11,17 @@ import { ScrollReveal, PerspectiveTilt } from '@/components/ui/kinetic-motion';
 import { User, Mail, Lock, Check, X, Sparkles, ArrowRight, ArrowLeft } from 'lucide-react';
 
 export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background" />}>
+      <RegisterPageInner />
+    </Suspense>
+  );
+}
+
+function RegisterPageInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const tierFromUrl = searchParams.get('tier');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -67,7 +77,12 @@ export default function RegisterPage() {
       if (!res.ok) {
         setError(data.error || 'Registration failed.');
       } else {
-        router.push('/dashboard/editor');
+        // If user came from pricing page with a tier, redirect to subscription page
+        if (tierFromUrl && (tierFromUrl === 'pro_2k' || tierFromUrl === 'elite_5k')) {
+          router.push(`/dashboard/subscribe?tier=${tierFromUrl}`);
+        } else {
+          router.push('/dashboard/editor');
+        }
       }
     } catch {
       setError('Connection error. Please retry.');

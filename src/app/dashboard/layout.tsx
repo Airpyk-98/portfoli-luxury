@@ -131,12 +131,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           />
 
           <div className="flex items-center justify-between pt-2">
-            <Link
-              href="/admin"
-              className="text-[11px] font-mono font-semibold text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-[#00FF87] flex items-center gap-1"
-            >
-              <Shield className="w-3.5 h-3.5" /> Admin Control
-            </Link>
+            {user?.role === 'admin' && (
+              <Link
+                href="/admin"
+                className="text-[11px] font-mono font-semibold text-zinc-600 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-[#00FF87] flex items-center gap-1"
+              >
+                <Shield className="w-3.5 h-3.5" /> Admin Control
+              </Link>
+            )}
             <button
               onClick={handleLogout}
               className="text-[11px] font-semibold text-zinc-600 dark:text-zinc-400 hover:text-rose-600 flex items-center gap-1 transition-colors cursor-pointer"
