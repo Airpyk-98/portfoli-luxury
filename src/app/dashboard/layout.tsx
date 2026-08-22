@@ -16,6 +16,7 @@ import {
 import { CountdownBadge } from '@/components/ui/countdown-badge';
 import { StorageBar } from '@/components/ui/storage-bar';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { SubscriptionGraceBanner } from '@/components/subscription-grace-banner';
 import { User } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -148,6 +149,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Main Content Viewport */}
       <main className="flex-1 p-6 md:p-10 overflow-y-auto max-w-7xl relative z-10">
+        <SubscriptionGraceBanner user={user} />
         {children}
       </main>
     </div>

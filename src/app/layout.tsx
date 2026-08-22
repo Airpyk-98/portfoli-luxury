@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans, Outfit, Space_Grotesk, Syne, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
+import { GTMScript } from '@/components/gtm-script';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -55,6 +56,7 @@ export default function RootLayout({
         className={`${plusJakartaSans.variable} ${outfit.variable} ${spaceGrotesk.variable} ${syne.variable} ${jetbrainsMono.variable} ${plusJakartaSans.className} font-sans antialiased selection:bg-emerald-400 selection:text-black`}
       >
         <ThemeProvider defaultTheme="dark">
+          <GTMScript />
           {children}
         </ThemeProvider>
       </body>

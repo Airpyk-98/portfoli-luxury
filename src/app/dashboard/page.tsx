@@ -27,13 +27,47 @@ export default function DashboardOverviewPage() {
   const [user, setUser] = useState<User | null>(null);
   const [portfolio, setPortfolio] = useState<UserPortfolio | null>(null);
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
+  const [paymentSuccessMsg, setPaymentSuccessMsg] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/portfolio')
       .then((res) => res.json())
       .then((data) => {
         if (data.portfolio) setPortfolio(data.portfolio);
-        if (data.user) setUser(data.user);
+        if (data.user) {
+          setUser(data.user);
+
+          // Check if returned from Flutterwave payment
+          if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search);
+            const txRef = urlParams.get('tx_ref');
+            const transactionId = urlParams.get('transaction_id');
+            const tier = urlParams.get('tier') || 'elite_5k';
+
+            if (txRef || transactionId) {
+              fetch('/api/payment/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  txRef,
+                  transactionId,
+                  userId: data.user.id,
+                  tier,
+                }),
+              })
+                .then((r) => r.json())
+                .then((vData) => {
+                  if (vData.success) {
+                    setPaymentSuccessMsg('🎉 Payment verified! Your 1-Year Elite subscription & 5GB storage are now active.');
+                    if (vData.user) setUser(vData.user);
+                    // Clean URL
+                    window.history.replaceState({}, document.title, '/dashboard');
+                  }
+                })
+                .catch(console.error);
+            }
+          }
+        }
       })
       .catch(console.error);
 
@@ -60,6 +94,22 @@ export default function DashboardOverviewPage() {
 
   return (
     <div className="space-y-8">
+      {/* Payment Success Celebration */}
+      {paymentSuccessMsg && (
+        <div className="p-4 rounded-2xl bg-emerald-500/20 border-2 border-emerald-500 text-emerald-300 text-xs font-bold flex items-center justify-between shadow-glass-glow animate-pulse font-mono">
+          <div className="flex items-center gap-2.5">
+            <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+            <span>{paymentSuccessMsg}</span>
+          </div>
+          <button
+            onClick={() => setPaymentSuccessMsg(null)}
+            className="text-xs text-zinc-400 hover:text-white px-2 py-1 rounded"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
       {/* Top Welcome Bar */}
       <ScrollReveal animation="fade-up">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

@@ -25,19 +25,35 @@ export default function PricingPage() {
   }, []);
 
   const handleUpgrade = async (tier: TierType) => {
+    if (tier === 'free') return;
     setUpgradingTier(tier);
     try {
-      const res = await fetch('/api/subscription/upgrade', {
+      const portRes = await fetch('/api/portfolio');
+      const portData = await portRes.json();
+
+      if (!portData.user) {
+        window.location.href = `/register?tier=${tier}`;
+        return;
+      }
+
+      const payRes = await fetch('/api/payment/initialize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ targetTier: tier }),
+        body: JSON.stringify({
+          userId: portData.user.id,
+          tier,
+        }),
       });
-      const data = await res.json();
-      if (res.ok) {
-        setUpgradeSuccess(`Successfully enrolled in ${tier.toUpperCase()}! Your daily countdown and limits have been updated.`);
+
+      const payData = await payRes.json();
+      if (payData.success && payData.checkoutUrl) {
+        window.location.href = payData.checkoutUrl;
+      } else {
+        alert(payData.message || 'Payment initiation failed');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      alert('Error initiating upgrade: ' + err.message);
     } finally {
       setUpgradingTier(null);
     }

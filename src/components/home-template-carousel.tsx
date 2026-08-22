@@ -33,18 +33,24 @@ export function HomeTemplateCarousel() {
 
   const total = filteredTemplates.length;
 
+  // Tripled list for infinite seamless wrap-around sliding
+  const loopedTemplates =
+    total > 1
+      ? [...filteredTemplates, ...filteredTemplates, ...filteredTemplates]
+      : filteredTemplates;
+
   // Reset index if filter changes
   useEffect(() => {
     setCurrentIndex(0);
   }, [selectedFilter]);
 
-  // Master 2-second continuous sliding loop
+  // Master continuous sliding loop (every 2.4 seconds, smoothly slide left by 1 card)
   useEffect(() => {
     if (!isAutoPlay || isHovered || total <= 1) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % total);
-    }, 2800);
+    }, 2500);
 
     return () => clearInterval(interval);
   }, [isAutoPlay, isHovered, total]);
@@ -57,22 +63,6 @@ export function HomeTemplateCarousel() {
     setCurrentIndex((prev) => (prev + 1) % total);
   };
 
-  // Re-order templates to create a seamless circular window
-  const getVisibleTemplates = () => {
-    if (total === 0) return [];
-    if (total === 1) return [filteredTemplates[0]];
-
-    // Create a 3-item window that wraps around infinitely
-    const items: { template: SampleTemplateInfo; index: number }[] = [];
-    for (let i = 0; i < Math.min(3, total); i++) {
-      const idx = (currentIndex + i) % total;
-      items.push({ template: filteredTemplates[idx], index: idx });
-    }
-    return items;
-  };
-
-  const visibleTemplates = getVisibleTemplates();
-
   return (
     <section
       id="templates"
@@ -84,13 +74,13 @@ export function HomeTemplateCarousel() {
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-400/40 text-emerald-800 dark:text-[#00FF87] text-xs font-mono font-bold shadow-sm">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>5 BESPOKE DESIGN PRESETS IN CONTINUOUS MOTION</span>
+            <span>CONTINUOUS 2-SECOND FLUID LOOP & 3D PROJECT CUBE</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-foreground font-display">
             Unique Portfolios for Every Discipline
           </h2>
           <p className="text-sm sm:text-base text-zinc-700 dark:text-zinc-300 max-w-2xl mx-auto font-normal">
-            Watch the live carousel transition through 3D Crystal Prisms, fluid side-swipes, and turntable optics. Every card dynamically rotates through real projects with smooth ease physics.
+            Watch the live carousel transition continuously every 2 seconds. Three cards remain visible on screen while each card automatically rotates through real projects with 3D cube, fluid swipe, and turntable physics.
           </p>
         </div>
       </ScrollReveal>
@@ -120,7 +110,7 @@ export function HomeTemplateCarousel() {
           ))}
         </div>
 
-        {/* Carousel Navigation Chevrons */}
+        {/* Carousel Navigation Chevrons & Auto-play toggle */}
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => setIsAutoPlay(!isAutoPlay)}
@@ -128,7 +118,7 @@ export function HomeTemplateCarousel() {
             title={isAutoPlay ? 'Pause Auto-slide' : 'Resume Auto-slide'}
           >
             {isAutoPlay ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 text-emerald-500" />}
-            <span className="hidden xs:inline">{isAutoPlay ? 'Auto' : 'Paused'}</span>
+            <span className="hidden xs:inline">{isAutoPlay ? 'Auto-looping' : 'Paused'}</span>
           </button>
 
           <button
@@ -149,13 +139,18 @@ export function HomeTemplateCarousel() {
         </div>
       </div>
 
-      {/* 3-Card Carousel Stage with Continuous Eased Slide Transitions */}
-      <div className="relative overflow-hidden py-2">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]">
-          {visibleTemplates.map(({ template, index }) => (
+      {/* CONTINUOUS HORIZONTAL SLIDING TRACK */}
+      <div className="relative overflow-hidden py-4 -mx-3">
+        <div
+          className="flex transition-transform duration-700 ease-[cubic-bezier(0.2,1,0.3,1)]"
+          style={{
+            transform: `translateX(-${(currentIndex * 100) / (total === 1 ? 1 : 3)}%)`,
+          }}
+        >
+          {loopedTemplates.map((template, idx) => (
             <div
-              key={`${template.id}_${index}`}
-              className="h-full transition-all duration-500"
+              key={`${template.id}_${idx}`}
+              className="w-full sm:w-1/2 lg:w-1/3 shrink-0 px-3 transition-opacity duration-500"
             >
               <PerspectiveTilt>
                 <GlassCard
@@ -200,7 +195,7 @@ export function HomeTemplateCarousel() {
                     {/* DYNAMIC LIVE MULTI-PROJECT PREVIEW (3D Cube, Fluid Swipe, Turntable) */}
                     <TemplateCardPreview
                       template={template}
-                      cardIndex={index}
+                      cardIndex={idx}
                       isPaused={isHovered}
                     />
 

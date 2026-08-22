@@ -8,9 +8,11 @@ export interface UserSubscription {
   autoRenew: boolean;
   amountPaid: number; // NGN
   currency: 'NGN';
+  lastPaymentRef?: string;
 }
 
 export type MediaDisplayMode = 'crystal_prism' | 'side_swipe' | 'carousel_3d' | 'bento_grid';
+export type DisplayMode = MediaDisplayMode;
 
 export interface MediaItem {
   id: string;
@@ -161,5 +163,91 @@ export interface PricingConfig {
     storageQuotaBytes: number; // 2GB = 2 * 1024 * 1024 * 1024
     subdomainAllowed: boolean;
     displayModesAllowed: MediaDisplayMode[];
+  };
+}
+
+export interface PaymentTransaction {
+  id: string;
+  txRef: string;
+  flwRef?: string;
+  userId: string;
+  username: string;
+  userEmail: string;
+  amount: number;
+  currency: string;
+  tier: TierType;
+  status: 'successful' | 'failed' | 'pending';
+  paymentType?: string;
+  createdAt: string;
+  verifiedAt?: string;
+  metadata?: Record<string, any>;
+}
+
+export interface SubscriptionStatusInfo {
+  isActive: boolean;
+  isGracePeriod: boolean;
+  isExpiredAndDecommissioned: boolean;
+  daysRemainingInSubscription: number;
+  daysRemainingInGrace: number;
+  endDate: string;
+  tier: TierType;
+}
+
+export function getSubscriptionStatus(sub?: UserSubscription): SubscriptionStatusInfo {
+  if (!sub || sub.tier === 'free') {
+    return {
+      isActive: true,
+      isGracePeriod: false,
+      isExpiredAndDecommissioned: false,
+      daysRemainingInSubscription: 9999,
+      daysRemainingInGrace: 30,
+      endDate: sub?.endDate || new Date().toISOString(),
+      tier: 'free',
+    };
+  }
+
+  const now = Date.now();
+  const endMs = new Date(sub.endDate).getTime();
+  const diffMs = endMs - now;
+  const daysRemaining = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+  // If subscription is still before endDate and active
+  if (daysRemaining > 0 && sub.active) {
+    return {
+      isActive: true,
+      isGracePeriod: false,
+      isExpiredAndDecommissioned: false,
+      daysRemainingInSubscription: daysRemaining,
+      daysRemainingInGrace: 30,
+      endDate: sub.endDate,
+      tier: sub.tier,
+    };
+  }
+
+  // If past endDate, check 30-day grace period
+  const daysPastExpiration = Math.abs(daysRemaining);
+  const graceDaysRemaining = Math.max(0, 30 - daysPastExpiration);
+
+  if (graceDaysRemaining > 0) {
+    return {
+      isActive: false,
+      isGracePeriod: true,
+      isExpiredAndDecommissioned: false,
+      daysRemainingInSubscription: 0,
+      daysRemainingInGrace: graceDaysRemaining,
+      endDate: sub.endDate,
+      tier: sub.tier,
+    };
+  }
+
+  // Expired past 30 days
+  return {
+    isActive: false,
+    isGracePeriod: false,
+    isExpiredAndDecommissioned: true,
+    daysRemainingInSubscription: 0,
+    daysRemainingInGrace: 0,
+    endDate: sub.endDate,
+    tier: sub.tier,
   };
 }
