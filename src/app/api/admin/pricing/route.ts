@@ -4,9 +4,8 @@ import { verifyToken } from '@/lib/auth';
 import { cookies } from 'next/headers';
 
 function isAuthorizedAdmin(req: Request, token?: string): boolean {
-  const currentPasscode = Database.getAdminPasscode();
   const adminKey = req.headers.get('x-admin-key');
-  if (adminKey && adminKey === currentPasscode) {
+  if (adminKey && Database.verifyAdminPasscode(adminKey)) {
     return true;
   }
   if (token) {

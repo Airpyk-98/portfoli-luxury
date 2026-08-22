@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     const currentPasscode = Database.getAdminPasscode();
 
     let isAuthorized = false;
-    if (adminKey && adminKey === currentPasscode) {
+    if (adminKey && Database.verifyAdminPasscode(adminKey)) {
       isAuthorized = true;
     } else if (token) {
       const payload = verifyToken(token);
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 
     const { currentPassword, newPassword } = await req.json();
 
-    if (!currentPassword || currentPassword !== currentPasscode) {
+    if (!currentPassword || !Database.verifyAdminPasscode(currentPassword)) {
       return NextResponse.json({ error: 'Current admin passcode is incorrect.' }, { status: 400 });
     }
 
