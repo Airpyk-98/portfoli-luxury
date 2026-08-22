@@ -3,15 +3,11 @@
     "id": "user_kristos_01",
     "email": "kristos@portfoli.me",
     "username": "kristos",
-    "passwordHash": "$2a$10$YourHashedPasswordHerePlaceholder",
     "name": "Kristos Vance",
     "role": "user",
     "subscription": {
       "tier": "elite_5k",
-      "startDate": "2026-07-06T14:23:36.822Z",
-      "endDate": "2027-07-06T14:23:36.822Z",
       "active": true,
-      "autoRenew": true,
       "amountPaid": 5000,
       "currency": "NGN"
     },
@@ -34,7 +30,7 @@
         "mode": "dark",
         "primaryFont": "Syne",
         "secondaryFont": "Plus Jakarta Sans",
-        "accentColor": "#F59E0B",
+        "accentColor": "#00FF87",
         "secondaryAccent": "#FFFFFF",
         "glassIntensity": "high",
         "displayMode": "crystal_prism",
@@ -83,7 +79,6 @@
           "client": "Aetheria Labs",
           "date": "2026",
           "liveUrl": "https://example.com/aetheria",
-          "githubUrl": "https://github.com",
           "featured": true,
           "order": 1,
           "media": [
@@ -94,7 +89,7 @@
               "originalName": "spatial_interface_hero.mp4",
               "sizeBytes": 18874368,
               "storageProvider": "hf",
-              "uploadedAt": "2026-08-20T14:23:36.821Z",
+              "uploadedAt": "2026-08-20T10:00:00.000Z",
               "title": "3D Volumetric Interaction Demo",
               "caption": "Click to play interactive demonstration without autoplay delay."
             },
@@ -103,88 +98,10 @@
               "type": "image",
               "url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80",
               "originalName": "prism_facet_01.jpg",
-              "sizeBytes": 2516582.4,
+              "sizeBytes": 2516582,
               "storageProvider": "hf",
-              "uploadedAt": "2026-08-20T14:23:36.821Z",
-              "title": "Specular Prism Reflections"
-            },
-            {
-              "id": "med_03",
-              "type": "image",
-              "url": "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=1200&auto=format&fit=crop&q=80",
-              "originalName": "glass_refraction.jpg",
-              "sizeBytes": 3250585.6,
-              "storageProvider": "hf",
-              "uploadedAt": "2026-08-20T14:23:36.821Z",
-              "title": "Refraction Optics & Mesh Shader"
-            }
-          ]
-        },
-        {
-          "id": "proj_02",
-          "title": "Neon Vault Fintech SuperApp",
-          "description": "Zero-latency institutional crypto asset custody platform with biometric authentication & instant settlement rails.",
-          "category": "Fintech / Security",
-          "tags": [
-            "Next.js",
-            "Tailwind CSS",
-            "Rust Backend",
-            "Web3"
-          ],
-          "client": "Neon Vault Global",
-          "date": "2025",
-          "liveUrl": "https://example.com/neonvault",
-          "featured": true,
-          "order": 2,
-          "media": [
-            {
-              "id": "med_04",
-              "type": "image",
-              "url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&auto=format&fit=crop&q=80",
-              "originalName": "vault_telemetry.jpg",
-              "sizeBytes": 1887436.8,
-              "storageProvider": "hf",
-              "uploadedAt": "2026-08-20T14:23:36.821Z",
-              "title": "Live Liquidity Telemetry"
-            },
-            {
-              "id": "med_05",
-              "type": "image",
-              "url": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1200&auto=format&fit=crop&q=80",
-              "originalName": "vault_cards.jpg",
-              "sizeBytes": 2202009.6,
-              "storageProvider": "hf",
-              "uploadedAt": "2026-08-20T14:23:36.821Z",
-              "title": "Emerald Metal Card Interface"
-            }
-          ]
-        },
-        {
-          "id": "proj_03",
-          "title": "Chrono Lux Smart Timepiece App",
-          "description": "Companion application for Swiss mechanical smart luxury watches, integrating micro-complications and precision telemetry.",
-          "category": "Luxury / Mobile",
-          "tags": [
-            "React Native",
-            "Swift",
-            "Design System",
-            "Micro-Interactions"
-          ],
-          "client": "Chrono Swiss SA",
-          "date": "2025",
-          "liveUrl": "https://example.com/chrono",
-          "featured": false,
-          "order": 3,
-          "media": [
-            {
-              "id": "med_06",
-              "type": "image",
-              "url": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&auto=format&fit=crop&q=80",
-              "originalName": "chrono_app.jpg",
-              "sizeBytes": 1572864,
-              "storageProvider": "hf",
-              "uploadedAt": "2026-08-20T14:23:36.822Z",
-              "title": "Precision Micro-complications"
+              "uploadedAt": "2026-08-20T10:00:00.000Z",
+              "title": "Prism Facet Structure"
             }
           ]
         }
@@ -192,86 +109,546 @@
       "services": [
         {
           "id": "srv_01",
-          "title": "End-to-End Product Design & Design Systems",
-          "description": "From zero-to-one design architecture, token-driven component systems, high-fidelity prototypes, and design handoff.",
-          "priceFormatted": "₦1,500,000 / Sprint",
-          "billingType": "fixed",
-          "deliveryTime": "2 - 3 Weeks",
+          "title": "High-Fidelity Spatial UI Architecture",
+          "description": "Full-scope spatial UI, WebGL micro-interactions, responsive design systems, and glassmorphic frontend code.",
+          "priceFormatted": "\u20a61,200,000",
+          "billingType": "project",
+          "deliveryTime": "3-4 Weeks",
           "features": [
-            "Figma Design System with 100+ Tokens",
-            "Interactive Prototyping & User Flows",
-            "Glassmorphism & Micro-Interaction Specs",
-            "Developer-ready Handoff & Asset Pack"
+            "3D Volumetric Prototyping",
+            "Custom Glassmorphic Tokens",
+            "Next.js / Tailwind Architecture",
+            "Zero-Autoplay Video Integration"
           ],
           "popular": true,
-          "ctaText": "Book Design Sprint",
+          "ctaText": "Commission Project",
           "order": 1
-        },
-        {
-          "id": "srv_02",
-          "title": "Full-Stack High-Performance Web Build",
-          "description": "Next.js 14, Tailwind CSS, TypeScript, and cloud-native backend deployment crafted for 99+ Core Web Vitals.",
-          "priceFormatted": "₦2,800,000",
-          "billingType": "fixed",
-          "deliveryTime": "3 - 4 Weeks",
-          "features": [
-            "SEO & Core Web Vitals Optimization (100 Score)",
-            "3D Canvas & Framer Motion Integrations",
-            "Database & Payment Rails (Paystack/Stripe)",
-            "CI/CD & Subdomain Multi-tenant Setup"
-          ],
-          "popular": false,
-          "ctaText": "Inquire Architecture",
-          "order": 2
-        },
-        {
-          "id": "srv_03",
-          "title": "Executive Fractional Design Advisory",
-          "description": "Weekly strategic reviews, portfolio audits, and technical UX leadership for high-growth tech startups.",
-          "priceFormatted": "₦750,000 / Month",
-          "billingType": "monthly",
-          "deliveryTime": "Ongoing (4 hrs/wk)",
-          "features": [
-            "Weekly 1-on-1 Strategy & Design Review",
-            "Codebase UX & A11y Audits",
-            "Hiring & Team Mentorship",
-            "Direct Slack & Asynchronous Access"
-          ],
-          "popular": false,
-          "ctaText": "Apply for Retainer",
-          "order": 3
         }
       ],
       "viewsCount": 1420,
-      "createdAt": "2026-06-21T14:23:36.822Z",
-      "updatedAt": "2026-08-20T14:23:36.822Z"
+      "createdAt": "2026-06-20T14:23:36.822Z",
+      "updatedAt": "2026-08-22T08:00:00.000Z"
+    }
+  },
+  {
+    "id": "user_elena_01",
+    "email": "elena@portfoli.me",
+    "username": "elena",
+    "name": "Elena Rostova",
+    "role": "user",
+    "subscription": {
+      "tier": "elite_5k",
+      "active": true,
+      "amountPaid": 5000,
+      "currency": "NGN"
     },
-    "storageUsedBytes": 29360128,
-    "createdAt": "2026-07-06T14:23:36.822Z",
-    "updatedAt": "2026-08-20T14:23:36.822Z"
+    "portfolio": {
+      "id": "port_elena_01",
+      "userId": "user_elena_01",
+      "username": "elena",
+      "customSubdomain": "elena",
+      "displayName": "Elena Rostova",
+      "headline": "Fashion Director & Luxury Editorial Stylist",
+      "bio": "Curating visual narratives across Paris, Milan, and New York. Defining high-fashion aesthetics for global luxury houses and avant-garde publications.",
+      "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&auto=format&fit=crop&q=80",
+      "location": "Paris & London",
+      "availableForHire": true,
+      "availabilityText": "Available for Select Q3 Advisory & Builds",
+      "emailContact": "elena@portfoli.me",
+      "phoneContact": "+234 812 345 6789",
+      "calendlyUrl": "https://calendly.com",
+      "theme": {
+        "mode": "dark",
+        "primaryFont": "Outfit",
+        "secondaryFont": "Plus Jakarta Sans",
+        "accentColor": "#F59E0B",
+        "secondaryAccent": "#FFFFFF",
+        "glassIntensity": "high",
+        "displayMode": "side_swipe",
+        "sectionScrollEffect": "reveal",
+        "typographyReveal": "stagger-glow",
+        "showAvailableBadge": true
+      },
+      "socials": [
+        {
+          "id": "s1",
+          "platform": "github",
+          "url": "https://github.com",
+          "label": "GitHub"
+        },
+        {
+          "id": "s2",
+          "platform": "linkedin",
+          "url": "https://linkedin.com",
+          "label": "LinkedIn"
+        },
+        {
+          "id": "s3",
+          "platform": "twitter",
+          "url": "https://x.com",
+          "label": "X / Twitter"
+        },
+        {
+          "id": "s4",
+          "platform": "dribbble",
+          "url": "https://dribbble.com",
+          "label": "Dribbble"
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj_el_01",
+          "title": "Vogue Haute Couture Autumn Campaign",
+          "description": "Art direction and styling for an 8-page global editorial spotlighting sculptural garments and natural lighting.",
+          "category": "Editorial Direction",
+          "tags": [
+            "Fashion Styling",
+            "Editorial",
+            "Creative Direction"
+          ],
+          "client": "Vogue International",
+          "date": "2026",
+          "featured": true,
+          "order": 1,
+          "media": [
+            {
+              "id": "med_el_01",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1200&auto=format&fit=crop&q=80",
+              "originalName": "vogue_couture_01.jpg",
+              "sizeBytes": 3355443,
+              "storageProvider": "hf",
+              "uploadedAt": "2026-08-22T08:00:00.000Z",
+              "title": "Vogue Autumn Cover Series"
+            }
+          ]
+        },
+        {
+          "id": "proj_el_02",
+          "title": "LVMH Private Salon Brandbook",
+          "description": "Luxury packaging, monograph design, and tactile typography for LVMH VIP clientele.",
+          "category": "Luxury Brand Identity",
+          "tags": [
+            "Monograph",
+            "Tactile Typography",
+            "LVMH"
+          ],
+          "client": "LVMH Group",
+          "date": "2025",
+          "featured": true,
+          "order": 2,
+          "media": [
+            {
+              "id": "med_el_02",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1200&auto=format&fit=crop&q=80",
+              "originalName": "lvmh_salon_02.jpg",
+              "sizeBytes": 2936012,
+              "storageProvider": "hf",
+              "uploadedAt": "2026-08-22T08:00:00.000Z",
+              "title": "LVMH VIP Salon Monograph"
+            }
+          ]
+        }
+      ],
+      "services": [
+        {
+          "id": "srv_01",
+          "title": "High-Fidelity Spatial UI Architecture",
+          "description": "Full-scope spatial UI, WebGL micro-interactions, responsive design systems, and glassmorphic frontend code.",
+          "priceFormatted": "\u20a61,200,000",
+          "billingType": "project",
+          "deliveryTime": "3-4 Weeks",
+          "features": [
+            "3D Volumetric Prototyping",
+            "Custom Glassmorphic Tokens",
+            "Next.js / Tailwind Architecture",
+            "Zero-Autoplay Video Integration"
+          ],
+          "popular": true,
+          "ctaText": "Commission Project",
+          "order": 1
+        }
+      ],
+      "viewsCount": 1420,
+      "createdAt": "2026-06-20T14:23:36.822Z",
+      "updatedAt": "2026-08-22T08:00:00.000Z"
+    }
+  },
+  {
+    "id": "user_marcus_01",
+    "email": "marcus@portfoli.me",
+    "username": "marcus",
+    "name": "Marcus Thorne",
+    "role": "user",
+    "subscription": {
+      "tier": "elite_5k",
+      "active": true,
+      "amountPaid": 5000,
+      "currency": "NGN"
+    },
+    "portfolio": {
+      "id": "port_marcus_01",
+      "userId": "user_marcus_01",
+      "username": "marcus",
+      "customSubdomain": "marcus",
+      "displayName": "Marcus Thorne",
+      "headline": "VFX Director & Commercial 3D Motion Lead",
+      "bio": "Crafting photorealistic CGI, cinematic simulations, and mind-bending visual effects for blockbuster campaigns and next-generation interactive experiences.",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80",
+      "location": "London & Los Angeles",
+      "availableForHire": true,
+      "availabilityText": "Available for Select Q3 Advisory & Builds",
+      "emailContact": "marcus@portfoli.me",
+      "phoneContact": "+234 812 345 6789",
+      "calendlyUrl": "https://calendly.com",
+      "theme": {
+        "mode": "dark",
+        "primaryFont": "Space Grotesk",
+        "secondaryFont": "Outfit",
+        "accentColor": "#A855F7",
+        "secondaryAccent": "#FFFFFF",
+        "glassIntensity": "high",
+        "displayMode": "carousel_3d",
+        "sectionScrollEffect": "reveal",
+        "typographyReveal": "stagger-glow",
+        "showAvailableBadge": true
+      },
+      "socials": [
+        {
+          "id": "s1",
+          "platform": "github",
+          "url": "https://github.com",
+          "label": "GitHub"
+        },
+        {
+          "id": "s2",
+          "platform": "linkedin",
+          "url": "https://linkedin.com",
+          "label": "LinkedIn"
+        },
+        {
+          "id": "s3",
+          "platform": "twitter",
+          "url": "https://x.com",
+          "label": "X / Twitter"
+        },
+        {
+          "id": "s4",
+          "platform": "dribbble",
+          "url": "https://dribbble.com",
+          "label": "Dribbble"
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj_mc_01",
+          "title": "Cyberpunk Hyper-Car Commercial CGI",
+          "description": "Full Houdini volumetric smoke and Unreal Engine 5 cinematic renders for an electric hyper-car world premiere.",
+          "category": "VFX & CGI",
+          "tags": [
+            "Unreal Engine 5",
+            "Houdini",
+            "Commercial VFX",
+            "3D Motion"
+          ],
+          "client": "Apex Motors",
+          "date": "2026",
+          "featured": true,
+          "order": 1,
+          "media": [
+            {
+              "id": "med_mc_01",
+              "type": "video",
+              "url": "https://assets.mixkit.co/videos/preview/mixkit-futuristic-robotic-interface-loop-41584-large.mp4",
+              "originalName": "apex_hypercar.mp4",
+              "sizeBytes": 15728640,
+              "storageProvider": "hf",
+              "uploadedAt": "2026-08-22T08:00:00.000Z",
+              "title": "Apex Hyper-Car World Premiere"
+            }
+          ]
+        }
+      ],
+      "services": [
+        {
+          "id": "srv_01",
+          "title": "High-Fidelity Spatial UI Architecture",
+          "description": "Full-scope spatial UI, WebGL micro-interactions, responsive design systems, and glassmorphic frontend code.",
+          "priceFormatted": "\u20a61,200,000",
+          "billingType": "project",
+          "deliveryTime": "3-4 Weeks",
+          "features": [
+            "3D Volumetric Prototyping",
+            "Custom Glassmorphic Tokens",
+            "Next.js / Tailwind Architecture",
+            "Zero-Autoplay Video Integration"
+          ],
+          "popular": true,
+          "ctaText": "Commission Project",
+          "order": 1
+        }
+      ],
+      "viewsCount": 1420,
+      "createdAt": "2026-06-20T14:23:36.822Z",
+      "updatedAt": "2026-08-22T08:00:00.000Z"
+    }
+  },
+  {
+    "id": "user_sora_01",
+    "email": "sora@portfoli.me",
+    "username": "sora",
+    "name": "Dr. Sora Tanaka",
+    "role": "user",
+    "subscription": {
+      "tier": "elite_5k",
+      "active": true,
+      "amountPaid": 5000,
+      "currency": "NGN"
+    },
+    "portfolio": {
+      "id": "port_sora_01",
+      "userId": "user_sora_01",
+      "username": "sora",
+      "customSubdomain": "sora",
+      "displayName": "Dr. Sora Tanaka",
+      "headline": "Parametric Architect & Spatial Acoustics Researcher",
+      "bio": "Designing responsive architectural geometries and acoustically optimized spatial structures that bridge computation with biophilic sustainability.",
+      "avatarUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&auto=format&fit=crop&q=80",
+      "location": "Tokyo & Zurich",
+      "availableForHire": true,
+      "availabilityText": "Available for Select Q3 Advisory & Builds",
+      "emailContact": "sora@portfoli.me",
+      "phoneContact": "+234 812 345 6789",
+      "calendlyUrl": "https://calendly.com",
+      "theme": {
+        "mode": "dark",
+        "primaryFont": "Space Grotesk",
+        "secondaryFont": "JetBrains Mono",
+        "accentColor": "#00F0FF",
+        "secondaryAccent": "#FFFFFF",
+        "glassIntensity": "high",
+        "displayMode": "bento_grid",
+        "sectionScrollEffect": "reveal",
+        "typographyReveal": "stagger-glow",
+        "showAvailableBadge": true
+      },
+      "socials": [
+        {
+          "id": "s1",
+          "platform": "github",
+          "url": "https://github.com",
+          "label": "GitHub"
+        },
+        {
+          "id": "s2",
+          "platform": "linkedin",
+          "url": "https://linkedin.com",
+          "label": "LinkedIn"
+        },
+        {
+          "id": "s3",
+          "platform": "twitter",
+          "url": "https://x.com",
+          "label": "X / Twitter"
+        },
+        {
+          "id": "s4",
+          "platform": "dribbble",
+          "url": "https://dribbble.com",
+          "label": "Dribbble"
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj_sr_01",
+          "title": "Hyperion Acoustic Concert Pavilion",
+          "description": "Generative timber lattice roof engineered to diffuse symphony audio frequencies without electronic amplification.",
+          "category": "Parametric Architecture",
+          "tags": [
+            "Parametric Design",
+            "Acoustics",
+            "Computational Geometry"
+          ],
+          "client": "Zurich Philharmonic",
+          "date": "2026",
+          "featured": true,
+          "order": 1,
+          "media": [
+            {
+              "id": "med_sr_01",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1200&auto=format&fit=crop&q=80",
+              "originalName": "hyperion_pavilion.jpg",
+              "sizeBytes": 3774873,
+              "storageProvider": "hf",
+              "uploadedAt": "2026-08-22T08:00:00.000Z",
+              "title": "Hyperion Concert Pavilion"
+            }
+          ]
+        }
+      ],
+      "services": [
+        {
+          "id": "srv_01",
+          "title": "High-Fidelity Spatial UI Architecture",
+          "description": "Full-scope spatial UI, WebGL micro-interactions, responsive design systems, and glassmorphic frontend code.",
+          "priceFormatted": "\u20a61,200,000",
+          "billingType": "project",
+          "deliveryTime": "3-4 Weeks",
+          "features": [
+            "3D Volumetric Prototyping",
+            "Custom Glassmorphic Tokens",
+            "Next.js / Tailwind Architecture",
+            "Zero-Autoplay Video Integration"
+          ],
+          "popular": true,
+          "ctaText": "Commission Project",
+          "order": 1
+        }
+      ],
+      "viewsCount": 1420,
+      "createdAt": "2026-06-20T14:23:36.822Z",
+      "updatedAt": "2026-08-22T08:00:00.000Z"
+    }
+  },
+  {
+    "id": "user_zara_01",
+    "email": "zara@portfoli.me",
+    "username": "zara",
+    "name": "Zara Sterling",
+    "role": "user",
+    "subscription": {
+      "tier": "elite_5k",
+      "active": true,
+      "amountPaid": 5000,
+      "currency": "NGN"
+    },
+    "portfolio": {
+      "id": "port_zara_01",
+      "userId": "user_zara_01",
+      "username": "zara",
+      "customSubdomain": "zara",
+      "displayName": "Zara Sterling",
+      "headline": "Principal Distributed Systems & Cryptographic Engineer",
+      "bio": "Architecting sub-millisecond consensus protocols, zero-knowledge verifiable compute engines, and fault-tolerant financial settlement infrastructure.",
+      "avatarUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=500&auto=format&fit=crop&q=80",
+      "location": "New York & Singapore",
+      "availableForHire": true,
+      "availabilityText": "Available for Select Q3 Advisory & Builds",
+      "emailContact": "zara@portfoli.me",
+      "phoneContact": "+234 812 345 6789",
+      "calendlyUrl": "https://calendly.com",
+      "theme": {
+        "mode": "dark",
+        "primaryFont": "JetBrains Mono",
+        "secondaryFont": "Plus Jakarta Sans",
+        "accentColor": "#FFFFFF",
+        "secondaryAccent": "#FFFFFF",
+        "glassIntensity": "high",
+        "displayMode": "bento_grid",
+        "sectionScrollEffect": "reveal",
+        "typographyReveal": "stagger-glow",
+        "showAvailableBadge": true
+      },
+      "socials": [
+        {
+          "id": "s1",
+          "platform": "github",
+          "url": "https://github.com",
+          "label": "GitHub"
+        },
+        {
+          "id": "s2",
+          "platform": "linkedin",
+          "url": "https://linkedin.com",
+          "label": "LinkedIn"
+        },
+        {
+          "id": "s3",
+          "platform": "twitter",
+          "url": "https://x.com",
+          "label": "X / Twitter"
+        },
+        {
+          "id": "s4",
+          "platform": "dribbble",
+          "url": "https://dribbble.com",
+          "label": "Dribbble"
+        }
+      ],
+      "projects": [
+        {
+          "id": "proj_zr_01",
+          "title": "Nexus ZK-Rollup Settlement Protocol",
+          "description": "High-throughput Layer 2 rollup engine capable of processing 85,000 verifiable transactions per second with sub-cent gas fees.",
+          "category": "Distributed Systems",
+          "tags": [
+            "Rust",
+            "Zero-Knowledge",
+            "Consensus Protocols",
+            "Cryptography"
+          ],
+          "client": "Nexus Foundation",
+          "date": "2026",
+          "featured": true,
+          "order": 1,
+          "media": [
+            {
+              "id": "med_zr_01",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&auto=format&fit=crop&q=80",
+              "originalName": "nexus_zk.jpg",
+              "sizeBytes": 2202009,
+              "storageProvider": "hf",
+              "uploadedAt": "2026-08-22T08:00:00.000Z",
+              "title": "Nexus ZK Consensus Architecture"
+            }
+          ]
+        }
+      ],
+      "services": [
+        {
+          "id": "srv_01",
+          "title": "High-Fidelity Spatial UI Architecture",
+          "description": "Full-scope spatial UI, WebGL micro-interactions, responsive design systems, and glassmorphic frontend code.",
+          "priceFormatted": "\u20a61,200,000",
+          "billingType": "project",
+          "deliveryTime": "3-4 Weeks",
+          "features": [
+            "3D Volumetric Prototyping",
+            "Custom Glassmorphic Tokens",
+            "Next.js / Tailwind Architecture",
+            "Zero-Autoplay Video Integration"
+          ],
+          "popular": true,
+          "ctaText": "Commission Project",
+          "order": 1
+        }
+      ],
+      "viewsCount": 1420,
+      "createdAt": "2026-06-20T14:23:36.822Z",
+      "updatedAt": "2026-08-22T08:00:00.000Z"
+    }
   },
   {
     "id": "user_admin_01",
     "email": "admin@portfoli.me",
     "username": "admin",
-    "passwordHash": "$2a$10$AdminHashedPasswordHerePlaceholder",
     "name": "Portfoli Master Admin",
     "role": "admin",
     "subscription": {
       "tier": "elite_5k",
-      "startDate": "2026-08-20T14:23:36.822Z",
-      "endDate": "2027-08-20T14:23:36.822Z",
       "active": true,
-      "autoRenew": true,
       "amountPaid": 0,
       "currency": "NGN"
     },
     "portfolio": {
-      "id": "port_admin_01",
-      "userId": "user_admin_01",
-      "username": "admin",
+      "id": "port_kristos_01",
+      "userId": "user_kristos_01",
+      "username": "kristos",
       "customSubdomain": "kristos",
-      "displayName": "Portfoli Executive",
+      "displayName": "Kristos Vance",
       "headline": "Principal Design Technologist & Creative Director",
       "bio": "Bridging the chasm between visionary spatial design, reactive glassmorphism, and robust full-stack engineering. Crafting products that redefine human-computer interfaces.",
       "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80",
@@ -334,7 +711,6 @@
           "client": "Aetheria Labs",
           "date": "2026",
           "liveUrl": "https://example.com/aetheria",
-          "githubUrl": "https://github.com",
           "featured": true,
           "order": 1,
           "media": [
@@ -345,7 +721,7 @@
               "originalName": "spatial_interface_hero.mp4",
               "sizeBytes": 18874368,
               "storageProvider": "hf",
-              "uploadedAt": "2026-08-20T14:23:36.821Z",
+              "uploadedAt": "2026-08-20T10:00:00.000Z",
               "title": "3D Volumetric Interaction Demo",
               "caption": "Click to play interactive demonstration without autoplay delay."
             },
@@ -354,88 +730,10 @@
               "type": "image",
               "url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80",
               "originalName": "prism_facet_01.jpg",
-              "sizeBytes": 2516582.4,
+              "sizeBytes": 2516582,
               "storageProvider": "hf",
-              "uploadedAt": "2026-08-20T14:23:36.821Z",
-              "title": "Specular Prism Reflections"
-            },
-            {
-              "id": "med_03",
-              "type": "image",
-              "url": "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=1200&auto=format&fit=crop&q=80",
-              "originalName": "glass_refraction.jpg",
-              "sizeBytes": 3250585.6,
-              "storageProvider": "hf",
-              "uploadedAt": "2026-08-20T14:23:36.821Z",
-              "title": "Refraction Optics & Mesh Shader"
-            }
-          ]
-        },
-        {
-          "id": "proj_02",
-          "title": "Neon Vault Fintech SuperApp",
-          "description": "Zero-latency institutional crypto asset custody platform with biometric authentication & instant settlement rails.",
-          "category": "Fintech / Security",
-          "tags": [
-            "Next.js",
-            "Tailwind CSS",
-            "Rust Backend",
-            "Web3"
-          ],
-          "client": "Neon Vault Global",
-          "date": "2025",
-          "liveUrl": "https://example.com/neonvault",
-          "featured": true,
-          "order": 2,
-          "media": [
-            {
-              "id": "med_04",
-              "type": "image",
-              "url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&auto=format&fit=crop&q=80",
-              "originalName": "vault_telemetry.jpg",
-              "sizeBytes": 1887436.8,
-              "storageProvider": "hf",
-              "uploadedAt": "2026-08-20T14:23:36.821Z",
-              "title": "Live Liquidity Telemetry"
-            },
-            {
-              "id": "med_05",
-              "type": "image",
-              "url": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1200&auto=format&fit=crop&q=80",
-              "originalName": "vault_cards.jpg",
-              "sizeBytes": 2202009.6,
-              "storageProvider": "hf",
-              "uploadedAt": "2026-08-20T14:23:36.821Z",
-              "title": "Emerald Metal Card Interface"
-            }
-          ]
-        },
-        {
-          "id": "proj_03",
-          "title": "Chrono Lux Smart Timepiece App",
-          "description": "Companion application for Swiss mechanical smart luxury watches, integrating micro-complications and precision telemetry.",
-          "category": "Luxury / Mobile",
-          "tags": [
-            "React Native",
-            "Swift",
-            "Design System",
-            "Micro-Interactions"
-          ],
-          "client": "Chrono Swiss SA",
-          "date": "2025",
-          "liveUrl": "https://example.com/chrono",
-          "featured": false,
-          "order": 3,
-          "media": [
-            {
-              "id": "med_06",
-              "type": "image",
-              "url": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&auto=format&fit=crop&q=80",
-              "originalName": "chrono_app.jpg",
-              "sizeBytes": 1572864,
-              "storageProvider": "hf",
-              "uploadedAt": "2026-08-20T14:23:36.822Z",
-              "title": "Precision Micro-complications"
+              "uploadedAt": "2026-08-20T10:00:00.000Z",
+              "title": "Prism Facet Structure"
             }
           ]
         }
@@ -443,226 +741,25 @@
       "services": [
         {
           "id": "srv_01",
-          "title": "End-to-End Product Design & Design Systems",
-          "description": "From zero-to-one design architecture, token-driven component systems, high-fidelity prototypes, and design handoff.",
-          "priceFormatted": "₦1,500,000 / Sprint",
-          "billingType": "fixed",
-          "deliveryTime": "2 - 3 Weeks",
+          "title": "High-Fidelity Spatial UI Architecture",
+          "description": "Full-scope spatial UI, WebGL micro-interactions, responsive design systems, and glassmorphic frontend code.",
+          "priceFormatted": "\u20a61,200,000",
+          "billingType": "project",
+          "deliveryTime": "3-4 Weeks",
           "features": [
-            "Figma Design System with 100+ Tokens",
-            "Interactive Prototyping & User Flows",
-            "Glassmorphism & Micro-Interaction Specs",
-            "Developer-ready Handoff & Asset Pack"
+            "3D Volumetric Prototyping",
+            "Custom Glassmorphic Tokens",
+            "Next.js / Tailwind Architecture",
+            "Zero-Autoplay Video Integration"
           ],
           "popular": true,
-          "ctaText": "Book Design Sprint",
+          "ctaText": "Commission Project",
           "order": 1
-        },
-        {
-          "id": "srv_02",
-          "title": "Full-Stack High-Performance Web Build",
-          "description": "Next.js 14, Tailwind CSS, TypeScript, and cloud-native backend deployment crafted for 99+ Core Web Vitals.",
-          "priceFormatted": "₦2,800,000",
-          "billingType": "fixed",
-          "deliveryTime": "3 - 4 Weeks",
-          "features": [
-            "SEO & Core Web Vitals Optimization (100 Score)",
-            "3D Canvas & Framer Motion Integrations",
-            "Database & Payment Rails (Paystack/Stripe)",
-            "CI/CD & Subdomain Multi-tenant Setup"
-          ],
-          "popular": false,
-          "ctaText": "Inquire Architecture",
-          "order": 2
-        },
-        {
-          "id": "srv_03",
-          "title": "Executive Fractional Design Advisory",
-          "description": "Weekly strategic reviews, portfolio audits, and technical UX leadership for high-growth tech startups.",
-          "priceFormatted": "₦750,000 / Month",
-          "billingType": "monthly",
-          "deliveryTime": "Ongoing (4 hrs/wk)",
-          "features": [
-            "Weekly 1-on-1 Strategy & Design Review",
-            "Codebase UX & A11y Audits",
-            "Hiring & Team Mentorship",
-            "Direct Slack & Asynchronous Access"
-          ],
-          "popular": false,
-          "ctaText": "Apply for Retainer",
-          "order": 3
         }
       ],
       "viewsCount": 1420,
-      "createdAt": "2026-06-21T14:23:36.822Z",
-      "updatedAt": "2026-08-20T14:23:36.822Z"
-    },
-    "storageUsedBytes": 5242880,
-    "createdAt": "2026-08-20T14:23:36.822Z",
-    "updatedAt": "2026-08-20T14:23:36.822Z"
-  },
-  {
-    "id": "user_1787235817026_xhu8h",
-    "email": "elena@example.com",
-    "username": "elena",
-    "passwordHash": "3cef173dcbe784f3649d22df4f5bce08:baa1158e391cbe51a66b1d4aa72b0550abcd3b14231e252d1f3cc7f283e0ebabbd349edcdd7c967a113a19889e69f906748c6dfc570e2b993577c6589d52a65e",
-    "name": "Elena Rostova",
-    "role": "user",
-    "subscription": {
-      "tier": "free",
-      "startDate": "2026-08-20T14:23:37.026Z",
-      "endDate": "2027-08-20T14:23:37.026Z",
-      "active": true,
-      "autoRenew": false,
-      "amountPaid": 0,
-      "currency": "NGN"
-    },
-    "portfolio": {
-      "id": "port_user_1787235817026_xhu8h",
-      "userId": "user_1787235817026_xhu8h",
-      "username": "elena",
-      "displayName": "Elena Rostova",
-      "headline": "Creative Professional & Builder",
-      "bio": "Crafting high-impact digital experiences and products.",
-      "availableForHire": true,
-      "availabilityText": "Open for Opportunities",
-      "emailContact": "elena@example.com",
-      "theme": {
-        "mode": "dark",
-        "primaryFont": "Syne",
-        "secondaryFont": "Plus Jakarta Sans",
-        "accentColor": "#00FF87",
-        "secondaryAccent": "#FFFFFF",
-        "glassIntensity": "high",
-        "displayMode": "crystal_prism",
-        "sectionScrollEffect": "reveal",
-        "typographyReveal": "stagger-glow",
-        "showAvailableBadge": true
-      },
-      "socials": [],
-      "projects": [],
-      "services": [],
-      "viewsCount": 0,
-      "createdAt": "2026-08-20T14:23:37.026Z",
-      "updatedAt": "2026-08-20T14:23:37.026Z"
-    },
-    "storageUsedBytes": 0,
-    "createdAt": "2026-08-20T14:23:37.028Z",
-    "updatedAt": "2026-08-20T14:23:37.028Z"
-  },
-  {
-    "id": "user_1787285530424_c35ao",
-    "email": "e.bringus@gmail.com",
-    "username": "bringus",
-    "passwordHash": "66adca4d82f273e2ebc5e372aba9df91:7a51e571f7a6f5b3623420cbb6e67c8cdb965a4198fef347272d8eea94ee751691ce01e91b0f020c9d263446ced75465e446f684e66dc442edebbd9b9917833c",
-    "name": "Paul Ebiringa",
-    "role": "user",
-    "subscription": {
-      "tier": "free",
-      "startDate": "2026-08-21T04:12:10.432Z",
-      "endDate": "2027-08-21T04:12:10.432Z",
-      "active": true,
-      "autoRenew": false,
-      "amountPaid": 0,
-      "currency": "NGN"
-    },
-    "portfolio": {
-      "id": "port_user_1787285530424_c35ao",
-      "userId": "user_1787285530424_c35ao",
-      "username": "bringus",
-      "displayName": "Paul Ebiringa",
-      "headline": "Creative Professional & Builder",
-      "bio": "Crafting high-impact digital experiences and products.",
-      "availableForHire": true,
-      "availabilityText": "Open for Opportunities",
-      "emailContact": "e.bringus@gmail.com",
-      "theme": {
-        "mode": "dark",
-        "primaryFont": "JetBrains Mono",
-        "secondaryFont": "Inter",
-        "accentColor": "#F59E0B",
-        "secondaryAccent": "#FFFFFF",
-        "glassIntensity": "high",
-        "displayMode": "carousel_3d",
-        "sectionScrollEffect": "reveal",
-        "typographyReveal": "stagger-glow",
-        "showAvailableBadge": true
-      },
-      "socials": [
-        {
-          "id": "soc_1787285583124",
-          "platform": "github",
-          "url": "https://github.com/Airpyk-98",
-          "label": "GitHub"
-        }
-      ],
-      "projects": [
-        {
-          "id": "proj_1787285702672",
-          "title": "New Creative Project",
-          "description": "Describe the project goals, challenge, and impact achieved.",
-          "category": "Design & Engineering",
-          "tags": [
-            "TypeScript",
-            "UI/UX",
-            "Glassmorphism"
-          ],
-          "client": "Client / Company",
-          "date": "2026",
-          "liveUrl": "https://example.com",
-          "featured": false,
-          "order": 2,
-          "media": [
-            {
-              "id": "med_1787285732426_wshkz",
-              "type": "image",
-              "url": "/uploads/images/1787285721349_Gemini_Generated_Image_iaxfapiaxfapiaxf.jfif",
-              "originalName": "Gemini_Generated_Image_iaxfapiaxfapiaxf.jfif",
-              "sizeBytes": 2727711,
-              "storageProvider": "hf",
-              "uploadedAt": "2026-08-21T04:15:32.426Z",
-              "compressed": false,
-              "compressionRatio": 1
-            }
-          ]
-        },
-        {
-          "id": "proj_1787285626974",
-          "title": "New Creative Project",
-          "description": "Describe the project goals, challenge, and impact achieved.",
-          "category": "Design & Engineering",
-          "tags": [
-            "TypeScript",
-            "UI/UX",
-            "Glassmorphism"
-          ],
-          "client": "Client / Company",
-          "date": "2026",
-          "liveUrl": "https://example.com",
-          "featured": false,
-          "order": 1,
-          "media": [
-            {
-              "id": "med_1787285652137_l9jv8",
-              "type": "image",
-              "url": "/uploads/images/1787285641324_the_days_of_noah_today.jpeg",
-              "originalName": "the days of noah today.jpeg",
-              "sizeBytes": 2746648,
-              "storageProvider": "hf",
-              "uploadedAt": "2026-08-21T04:14:12.138Z",
-              "compressed": false,
-              "compressionRatio": 1
-            }
-          ]
-        }
-      ],
-      "services": [],
-      "viewsCount": 0,
-      "createdAt": "2026-08-21T04:12:10.432Z",
-      "updatedAt": "2026-08-21T11:34:04.011Z"
-    },
-    "storageUsedBytes": 5474359,
-    "createdAt": "2026-08-21T04:12:10.434Z",
-    "updatedAt": "2026-08-21T04:12:10.434Z"
+      "createdAt": "2026-06-20T14:23:36.822Z",
+      "updatedAt": "2026-08-22T08:00:00.000Z"
+    }
   }
 ]
