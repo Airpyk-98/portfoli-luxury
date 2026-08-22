@@ -474,7 +474,7 @@ const SEED_ZARA_PORTFOLIO: UserPortfolio = {
   ],
 };
 
-const SEED_USERS: User[] = [
+export const SEED_USERS: User[] = [
   {
     id: 'user_kristos_01',
     email: 'kristos@portfoli.site',

@@ -69,6 +69,37 @@ export async function initNeonSchema() {
       CREATE INDEX IF NOT EXISTS idx_users_subdomain ON users ((portfolio->>'customSubdomain'));
     `;
 
+    // 5. Seed initial demo users if table is empty
+    const countRes = await sql`SELECT count(*)::int as count FROM users;`;
+    if (countRes && countRes[0] && countRes[0].count === 0) {
+      try {
+        const { SEED_USERS } = require('./storage');
+        if (Array.isArray(SEED_USERS) && SEED_USERS.length > 0) {
+          for (const u of SEED_USERS) {
+            await sql`
+              INSERT INTO users (
+                id, email, username, password_hash, name, role, subscription, portfolio, storage_used_bytes, created_at, updated_at
+              ) VALUES (
+                ${u.id},
+                ${u.email.toLowerCase()},
+                ${u.username.toLowerCase()},
+                ${u.passwordHash || ''},
+                ${u.name},
+                ${u.role || 'user'},
+                ${JSON.stringify(u.subscription)},
+                ${JSON.stringify(u.portfolio)},
+                ${u.storageUsedBytes || 0},
+                NOW(),
+                NOW()
+              ) ON CONFLICT (id) DO NOTHING;
+            `;
+          }
+        }
+      } catch (seedErr) {
+        console.warn('Seed population notice:', seedErr);
+      }
+    }
+
     isSchemaInitialized = true;
   } catch (err) {
     console.warn('Neon schema init notice (might be read-only or connecting):', err);
