@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { PricingConfig } from '@/lib/types';
+import { PricingConfig, TierType } from '@/lib/types';
 import { DEFAULT_PRICING, formatBytes } from '@/lib/tiers';
 import { GlassCard } from '@/components/ui/glass-card';
 import { GlassButton } from '@/components/ui/glass-button';
@@ -33,6 +33,15 @@ import {
   Activity,
   Check,
   RefreshCw,
+  Search,
+  UserCheck,
+  UserX,
+  Clock,
+  Calendar,
+  AlertCircle,
+  ChevronRight,
+  MoreVertical,
+  PlusCircle,
 } from 'lucide-react';
 
 export default function AdminControlPage() {
@@ -41,7 +50,15 @@ export default function AdminControlPage() {
   const [authError, setAuthError] = useState<string | null>(null);
 
   // Active Admin Tab
-  const [activeTab, setActiveTab] = useState<'pricing' | 'gateway' | 'transactions' | 'gtm' | 'security'>('pricing');
+  const [activeTab, setActiveTab] = useState<'users' | 'pricing' | 'gateway' | 'transactions' | 'gtm' | 'security'>('users');
+
+  // User Management State
+  const [usersList, setUsersList] = useState<any[]>([]);
+  const [userAnalytics, setUserAnalytics] = useState<any>(null);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterTier, setFilterTier] = useState<string>('all');
+  const [filterStatus, setFilterStatus] = useState<string>('all');
 
   // Pricing & Telemetry
   const [pricing, setPricing] = useState<PricingConfig>(DEFAULT_PRICING);
@@ -87,6 +104,24 @@ export default function AdminControlPage() {
     }
   }, []);
 
+  const loadUsersList = async (key: string) => {
+    setLoadingUsers(true);
+    try {
+      const res = await fetch('/api/admin/users', {
+        headers: { 'x-admin-key': key },
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUsersList(data.users || []);
+        setUserAnalytics(data.analytics || null);
+      }
+    } catch (err) {
+      console.error('Error loading users list:', err);
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
+
   const loadPaymentSettings = async (key: string) => {
     try {
       const res = await fetch('/api/admin/payment-settings', {
@@ -115,6 +150,7 @@ export default function AdminControlPage() {
         sessionStorage.setItem('portfoli_admin_key', key);
         if (data.pricing) setPricing(data.pricing);
         if (data.telemetry) setTelemetry(data.telemetry);
+        loadUsersList(key);
         loadPaymentSettings(key);
       } else {
         setIsAdminAuthenticated(false);
@@ -237,6 +273,33 @@ export default function AdminControlPage() {
     }
   };
 
+  // Filtered Users List
+  const filteredUsers = usersList.filter((u) => {
+    const q = searchQuery.toLowerCase();
+    const matchesSearch =
+      !q ||
+      u.name?.toLowerCase().includes(q) ||
+      u.username?.toLowerCase().includes(q) ||
+      u.email?.toLowerCase().includes(q);
+
+    const matchesTier =
+      filterTier === 'all' ||
+      u.subscription?.tier === filterTier;
+
+    let matchesStatus = true;
+    if (filterStatus === 'active') {
+      matchesStatus = u.statusInfo?.isActive && u.subscription?.tier !== 'free';
+    } else if (filterStatus === 'free') {
+      matchesStatus = u.subscription?.tier === 'free';
+    } else if (filterStatus === 'grace') {
+      matchesStatus = u.statusInfo?.isGracePeriod;
+    } else if (filterStatus === 'expired') {
+      matchesStatus = u.statusInfo?.isExpiredAndDecommissioned;
+    }
+
+    return matchesSearch && matchesTier && matchesStatus;
+  });
+
   // If not authenticated, render Security Gate
   if (!isAdminAuthenticated) {
     return (
@@ -296,7 +359,7 @@ export default function AdminControlPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-emerald-500/10 rounded-full blur-[160px]" />
       </div>
 
-      <div className="max-w-6xl mx-auto space-y-8 relative z-10 pb-20">
+      <div className="max-w-7xl mx-auto space-y-8 relative z-10 pb-20">
         {/* Header Bar */}
         <div className="flex items-center justify-between">
           <Link
@@ -329,10 +392,10 @@ export default function AdminControlPage() {
               Platform Master Infrastructure
             </span>
             <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground font-display">
-              Payment Gateway, Analytics & Pricing Control
+              User Management & Platform Command Center
             </h1>
             <p className="text-xs text-zinc-600 dark:text-zinc-400">
-              Manage Flutterwave v4 Live payment credentials, Google Tag Manager container, subscription grace periods, and real-time revenue telemetry.
+              Track creator subscribers, monitor remaining subscription days, manage Flutterwave v4 Live keys, and inspect real-time platform revenue.
             </p>
           </div>
         </ScrollReveal>
@@ -340,6 +403,7 @@ export default function AdminControlPage() {
         {/* Admin Navigation Tabs */}
         <div className="flex flex-wrap items-center gap-2 border-b border-border pb-3">
           {[
+            { id: 'users', label: 'Users & Subscription Roster', icon: Users },
             { id: 'pricing', label: 'Dynamic Pricing Matrix', icon: DollarSign },
             { id: 'gateway', label: 'Flutterwave Payment Gateway', icon: CreditCard },
             { id: 'transactions', label: 'Live Revenue & Transactions', icon: TrendingUp },
@@ -365,58 +429,293 @@ export default function AdminControlPage() {
           })}
         </div>
 
-        {/* Global Telemetry Metric Cards */}
-        {telemetry && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <PerspectiveTilt>
-              <GlassCard intensity="high" className="p-5 space-y-2">
-                <div className="flex items-center justify-between text-zinc-600 dark:text-zinc-400 text-xs font-bold">
-                  <span>Total Creators</span>
-                  <Users className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" />
-                </div>
-                <div className="text-3xl font-black font-mono text-foreground">{telemetry.totalUsers}</div>
-                <div className="text-[11px] text-zinc-600 dark:text-zinc-400">Registered accounts across all nodes</div>
-              </GlassCard>
-            </PerspectiveTilt>
+        {/* TAB 0: USERS & SUBSCRIPTION ROSTER (USER MANAGEMENT DASHBOARD) */}
+        {activeTab === 'users' && (
+          <div className="space-y-6">
+            {/* User Management Analytics Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <PerspectiveTilt>
+                <GlassCard intensity="high" className="p-5 space-y-2">
+                  <div className="flex items-center justify-between text-zinc-600 dark:text-zinc-400 text-xs font-bold">
+                    <span>Total Creators</span>
+                    <Users className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" />
+                  </div>
+                  <div className="text-3xl font-black font-mono text-foreground">
+                    {userAnalytics?.totalUsers || usersList.length || 0}
+                  </div>
+                  <div className="text-[11px] text-zinc-600 dark:text-zinc-400">All registered creator profiles</div>
+                </GlassCard>
+              </PerspectiveTilt>
 
-            <PerspectiveTilt>
-              <GlassCard intensity="high" className="p-5 space-y-2">
-                <div className="flex items-center justify-between text-zinc-600 dark:text-zinc-400 text-xs font-bold">
-                  <span>Active Subscriptions</span>
-                  <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" />
-                </div>
-                <div className="text-3xl font-black font-mono text-emerald-700 dark:text-[#00FF87]">
-                  {telemetry.activeSubscriptions}
-                </div>
-                <div className="text-[11px] text-zinc-600 dark:text-zinc-400">Pro & Elite recurring plans</div>
-              </GlassCard>
-            </PerspectiveTilt>
+              <PerspectiveTilt>
+                <GlassCard intensity="ultra" glow className="p-5 space-y-2 border-emerald-500/40">
+                  <div className="flex items-center justify-between text-zinc-600 dark:text-zinc-400 text-xs font-bold">
+                    <span>Active Paid Subscribers</span>
+                    <UserCheck className="w-4 h-4 text-emerald-500" />
+                  </div>
+                  <div className="text-3xl font-black font-mono text-emerald-700 dark:text-[#00FF87]">
+                    {userAnalytics?.paidSubscribers || 0}
+                  </div>
+                  <div className="text-[11px] text-zinc-600 dark:text-zinc-400">
+                    Pro & Elite active paid plans ({userAnalytics?.conversionRate || 0}% conversion)
+                  </div>
+                </GlassCard>
+              </PerspectiveTilt>
 
-            <PerspectiveTilt>
-              <GlassCard intensity="high" className="p-5 space-y-2">
-                <div className="flex items-center justify-between text-zinc-600 dark:text-zinc-400 text-xs font-bold">
-                  <span>Gross Revenue</span>
-                  <DollarSign className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" />
-                </div>
-                <div className="text-3xl font-black font-mono text-foreground">
-                  ₦{((liveRevenueStats?.totalRevenueNgn || telemetry.totalRevenueNgn) || 0).toLocaleString()}
-                </div>
-                <div className="text-[11px] text-zinc-600 dark:text-zinc-400">Annual Gross Platform Revenue</div>
-              </GlassCard>
-            </PerspectiveTilt>
+              <PerspectiveTilt>
+                <GlassCard intensity="high" className="p-5 space-y-2">
+                  <div className="flex items-center justify-between text-zinc-600 dark:text-zinc-400 text-xs font-bold">
+                    <span>Free / Starter Users</span>
+                    <UserX className="w-4 h-4 text-zinc-400" />
+                  </div>
+                  <div className="text-3xl font-black font-mono text-foreground">
+                    {userAnalytics?.freeUsers || 0}
+                  </div>
+                  <div className="text-[11px] text-zinc-600 dark:text-zinc-400">Starter free tier accounts</div>
+                </GlassCard>
+              </PerspectiveTilt>
 
-            <PerspectiveTilt>
-              <GlassCard intensity="high" className="p-5 space-y-2">
-                <div className="flex items-center justify-between text-zinc-600 dark:text-zinc-400 text-xs font-bold">
-                  <span>Storage Consumed</span>
-                  <HardDrive className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" />
-                </div>
-                <div className="text-3xl font-black font-mono text-foreground">
-                  {formatBytes(telemetry.totalStorageUsedBytes)}
-                </div>
-                <div className="text-[11px] text-zinc-600 dark:text-zinc-400">Global Cloud & Media Cache</div>
-              </GlassCard>
-            </PerspectiveTilt>
+              <PerspectiveTilt>
+                <GlassCard
+                  intensity="high"
+                  className={`p-5 space-y-2 ${
+                    userAnalytics?.inGracePeriod > 0 ? 'border-amber-500/50 bg-amber-500/5' : ''
+                  }`}
+                >
+                  <div className="flex items-center justify-between text-zinc-600 dark:text-zinc-400 text-xs font-bold">
+                    <span>In 30-Day Grace Period</span>
+                    <Clock className={`w-4 h-4 ${userAnalytics?.inGracePeriod > 0 ? 'text-amber-400 animate-pulse' : 'text-zinc-400'}`} />
+                  </div>
+                  <div className={`text-3xl font-black font-mono ${userAnalytics?.inGracePeriod > 0 ? 'text-amber-400' : 'text-foreground'}`}>
+                    {userAnalytics?.inGracePeriod || 0}
+                  </div>
+                  <div className="text-[11px] text-zinc-600 dark:text-zinc-400">Expiring subscribers needing renewal</div>
+                </GlassCard>
+              </PerspectiveTilt>
+            </div>
+
+            {/* Filter & Search Bar */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-black/20 p-3.5 rounded-2xl border border-border">
+              <div className="flex-1 relative">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+                <input
+                  type="text"
+                  placeholder="Search by creator name, username, or email..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2 rounded-xl bg-card-bg border border-border text-xs text-foreground placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500/50"
+                />
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <select
+                  value={filterTier}
+                  onChange={(e) => setFilterTier(e.target.value)}
+                  className="bg-card-bg border border-border text-foreground rounded-xl px-3 py-2 text-xs font-mono font-medium"
+                >
+                  <option value="all">All Tiers</option>
+                  <option value="elite_5k">Elite Mastery (₦5,000)</option>
+                  <option value="pro_2k">Creator Pro (₦2,000)</option>
+                  <option value="free">Starter Free</option>
+                </select>
+
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  className="bg-card-bg border border-border text-foreground rounded-xl px-3 py-2 text-xs font-mono font-medium"
+                >
+                  <option value="all">All Statuses</option>
+                  <option value="active">Active Paid Subscribers</option>
+                  <option value="free">Free Accounts</option>
+                  <option value="grace">In Grace Period</option>
+                  <option value="expired">Decommissioned</option>
+                </select>
+
+                <button
+                  onClick={() => {
+                    const key = sessionStorage.getItem('portfoli_admin_key') || adminPasscode;
+                    loadUsersList(key);
+                  }}
+                  className="p-2 rounded-xl bg-card-bg border border-border text-foreground hover:text-emerald-500 transition-all cursor-pointer flex items-center gap-1 text-xs font-mono"
+                  title="Refresh User List"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${loadingUsers ? 'animate-spin' : ''}`} />
+                </button>
+              </div>
+            </div>
+
+            {/* Desktop & Mobile Responsive User Table */}
+            <GlassCard intensity="high" className="p-0 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs font-mono min-w-[760px]">
+                  <thead className="bg-black/40 border-b border-border text-zinc-400 uppercase text-[10px] tracking-wider">
+                    <tr>
+                      <th className="p-4">Creator / User</th>
+                      <th className="p-4">Portfolio Link</th>
+                      <th className="p-4">Subscription Tier</th>
+                      <th className="p-4">Subscription Date</th>
+                      <th className="p-4">Days Left / Status</th>
+                      <th className="p-4">Storage Usage</th>
+                      <th className="p-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {filteredUsers.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="p-8 text-center text-zinc-500 font-sans">
+                          {loadingUsers ? 'Loading creators roster...' : 'No users matching your search filters.'}
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredUsers.map((u) => {
+                        const tier = u.subscription?.tier || 'free';
+                        const isFree = tier === 'free';
+                        const status = u.statusInfo;
+                        const startDateFormatted = u.subscription?.startDate
+                          ? new Date(u.subscription.startDate).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                            })
+                          : '—';
+
+                        return (
+                          <tr key={u.id || u.username} className="hover:bg-white/[0.02] transition-colors">
+                            {/* Creator / User */}
+                            <td className="p-4">
+                              <div className="flex items-center gap-3">
+                                {u.avatarUrl ? (
+                                  <img
+                                    src={u.avatarUrl}
+                                    alt={u.name}
+                                    className="w-8 h-8 rounded-full object-cover border border-border flex-shrink-0"
+                                  />
+                                ) : (
+                                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                                    {u.name?.charAt(0) || u.username?.charAt(0) || 'U'}
+                                  </div>
+                                )}
+                                <div>
+                                  <div className="font-bold text-foreground font-sans flex items-center gap-1.5">
+                                    <span>{u.name}</span>
+                                    {u.role === 'admin' && (
+                                      <span className="px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-bold">
+                                        ADMIN
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div className="text-[11px] text-zinc-500">{u.email}</div>
+                                </div>
+                              </div>
+                            </td>
+
+                            {/* Public Link */}
+                            <td className="p-4 font-bold text-emerald-400">
+                              <a
+                                href={`/${u.username}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 hover:underline text-[11px]"
+                              >
+                                portfoli.me/{u.username}
+                                <ExternalLink className="w-3 h-3 text-zinc-500" />
+                              </a>
+                            </td>
+
+                            {/* Subscription Tier */}
+                            <td className="p-4">
+                              {tier === 'elite_5k' ? (
+                                <span className="px-2.5 py-1 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1">
+                                  <Sparkles className="w-3 h-3 text-cyan-400" /> Elite Mastery
+                                </span>
+                              ) : tier === 'pro_2k' ? (
+                                <span className="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold uppercase tracking-wider inline-flex items-center gap-1">
+                                  <TrendingUp className="w-3 h-3 text-emerald-400" /> Creator Pro
+                                </span>
+                              ) : (
+                                <span className="px-2.5 py-1 rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700 text-[10px] font-bold uppercase tracking-wider">
+                                  Starter Free
+                                </span>
+                              )}
+                            </td>
+
+                            {/* Subscription Start Date (or Dash if not subscribing) */}
+                            <td className="p-4 text-zinc-300 text-xs">
+                              {isFree ? (
+                                <span className="text-zinc-600 font-bold text-sm">—</span>
+                              ) : (
+                                <div className="flex items-center gap-1.5">
+                                  <Calendar className="w-3.5 h-3.5 text-zinc-500" />
+                                  <span>{startDateFormatted}</span>
+                                </div>
+                              )}
+                            </td>
+
+                            {/* Days Remaining / Expiration Status */}
+                            <td className="p-4">
+                              {isFree ? (
+                                <span className="px-2 py-0.5 rounded bg-zinc-900 text-zinc-500 border border-zinc-800 text-[10px] font-bold">
+                                  Free Forever
+                                </span>
+                              ) : status?.isActive ? (
+                                <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 text-[10px] font-bold inline-flex items-center gap-1.5 shadow-glass-glow">
+                                  <Clock className="w-3 h-3 text-emerald-400" />
+                                  <span>{status.daysRemainingInSubscription} Days Left</span>
+                                </span>
+                              ) : status?.isGracePeriod ? (
+                                <span className="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/50 text-[10px] font-bold inline-flex items-center gap-1.5 animate-pulse">
+                                  <AlertCircle className="w-3 h-3 text-amber-400" />
+                                  <span>⚠️ {status.daysRemainingInGrace} Days Grace Left</span>
+                                </span>
+                              ) : (
+                                <span className="px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/50 text-[10px] font-bold">
+                                  Decommissioned
+                                </span>
+                              )}
+                            </td>
+
+                            {/* Storage Usage */}
+                            <td className="p-4">
+                              <div className="space-y-1">
+                                <div className="text-[11px] text-zinc-400">
+                                  {formatBytes(u.storageUsedBytes || 0)} / {tier === 'elite_5k' ? '5 GB' : tier === 'pro_2k' ? '1 GB' : '100 MB'}
+                                </div>
+                                <div className="w-24 h-1.5 rounded-full bg-zinc-800 overflow-hidden">
+                                  <div
+                                    className={`h-full ${tier === 'elite_5k' ? 'bg-cyan-400' : 'bg-emerald-400'}`}
+                                    style={{
+                                      width: `${Math.min(100, Math.max(5, ((u.storageUsedBytes || 0) / (tier === 'elite_5k' ? 5368709120 : tier === 'pro_2k' ? 1073741824 : 104857600)) * 100))}%`,
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            </td>
+
+                            {/* Actions */}
+                            <td className="p-4 text-right">
+                              <a
+                                href={`/${u.username}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-2.5 py-1 rounded-lg bg-card-bg hover:bg-emerald-500 hover:text-black border border-border text-foreground transition-all cursor-pointer inline-flex items-center gap-1 text-[11px] font-sans font-semibold"
+                              >
+                                <span>Preview</span>
+                                <ChevronRight className="w-3 h-3" />
+                              </a>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Scroll Hint */}
+              <div className="sm:hidden p-3 bg-black/40 border-t border-border text-center text-[10px] text-zinc-500 font-mono flex items-center justify-center gap-1">
+                <span>← Swipe table horizontally to view full details →</span>
+              </div>
+            </GlassCard>
           </div>
         )}
 
@@ -597,7 +896,7 @@ export default function AdminControlPage() {
                   Flutterwave v4 Live Payment Gateway
                 </h2>
                 <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                  Configure your Flutterwave Client ID, Client Secret, and Secret Keys to receive payments directly into your bank account.
+                  Configure your Flutterwave Client ID, Client Secret, and Encryption Key to receive payments directly into your bank account.
                 </p>
               </div>
 
@@ -631,14 +930,15 @@ export default function AdminControlPage() {
                   </div>
 
                   <GlassInput
-                    label="Flutterwave Client ID"
+                    label="Flutterwave Client ID (v4 OAuth 2.0)"
                     placeholder="Enter your Client ID"
                     value={paymentSettings.clientId}
                     onChange={(e) => setPaymentSettings({ ...paymentSettings, clientId: e.target.value })}
+                    helperText="Used to generate temporary OAuth 2.0 Bearer tokens"
                   />
 
                   <GlassInput
-                    label="Flutterwave Client Secret"
+                    label="Flutterwave Client Secret (v4 OAuth 2.0)"
                     type="password"
                     placeholder="Enter your Client Secret"
                     value={paymentSettings.clientSecret}
@@ -721,7 +1021,7 @@ export default function AdminControlPage() {
 
                   <div className="pt-4 border-t border-border flex items-center justify-between">
                     <div className="text-xs font-mono text-zinc-500">
-                      Status: {paymentSettings.secretKey ? <span className="text-emerald-500 font-bold">● Connected</span> : <span className="text-amber-500 font-bold">● Credentials Pending</span>}
+                      Status: {paymentSettings.secretKey || paymentSettings.clientSecret ? <span className="text-emerald-500 font-bold">● Connected</span> : <span className="text-amber-500 font-bold">● Credentials Pending</span>}
                     </div>
                     <GlassButton type="submit" variant="primary" glow loading={savingSettings} className="text-xs font-bold">
                       <Save className="w-3.5 h-3.5" /> Save Flutterwave Credentials
