@@ -1,0 +1,38 @@
+{
+  "free": {
+    "priceNgn": 0,
+    "maxVideos": 1,
+    "maxPhotos": 5,
+    "storageQuotaBytes": 209715200,
+    "subdomainAllowed": false,
+    "displayModesAllowed": [
+      "carousel_3d",
+      "bento_grid"
+    ]
+  },
+  "pro_2k": {
+    "priceNgn": 2500,
+    "maxVideos": 12,
+    "maxPhotos": 80,
+    "storageQuotaBytes": 1073741824,
+    "subdomainAllowed": false,
+    "displayModesAllowed": [
+      "carousel_3d",
+      "side_swipe",
+      "bento_grid"
+    ]
+  },
+  "elite_5k": {
+    "priceNgn": 5500,
+    "maxVideos": 9999,
+    "maxPhotos": 99999,
+    "storageQuotaBytes": 2147483648,
+    "subdomainAllowed": true,
+    "displayModesAllowed": [
+      "crystal_prism",
+      "side_swipe",
+      "carousel_3d",
+      "bento_grid"
+    ]
+  }
+}

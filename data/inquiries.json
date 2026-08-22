@@ -1,0 +1,24 @@
+[
+  {
+    "portfolioUserId": "user_1787285530424_c35ao",
+    "portfolioUsername": "bringus",
+    "senderName": "Marlk",
+    "senderEmail": "ikeepic@gmail.com",
+    "senderSubject": "Inquiry regarding undefined",
+    "message": "Hello",
+    "id": "inq_1787285958125_659vp",
+    "createdAt": "2026-08-21T04:19:18.125Z",
+    "read": false
+  },
+  {
+    "portfolioUserId": "user_kristos_01",
+    "portfolioUsername": "kristos",
+    "senderName": "Silicon Ventures",
+    "senderEmail": "partner@siliconvc.com",
+    "senderSubject": "Design System Sprint Lead",
+    "message": "We loved your spatial operating interface project and want to book a design sprint.",
+    "id": "inq_1787235817059_d5pl3",
+    "createdAt": "2026-08-20T14:23:37.059Z",
+    "read": false
+  }
+]
