@@ -7,7 +7,7 @@ import Script from 'next/script';
 export function GTMScript() {
   const pathname = usePathname();
   const [gtmId, setGtmId] = useState<string>(
-    process.env.NEXT_PUBLIC_GTM_ID || 'GTM-PORTFOLI2026'
+    process.env.NEXT_PUBLIC_GTM_ID || 'GTM-MSFTWV9X'
   );
   const [ga4Id, setGa4Id] = useState<string>(
     process.env.NEXT_PUBLIC_GA4_ID || ''
