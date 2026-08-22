@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
 
     const settings = getPaymentSettings();
     const selectedTier: TierType = tier === 'pro_2k' ? 'pro_2k' : 'elite_5k';
-    const pricing = Database.getPricing();
+    const pricing = Database.getPricingConfig();
     const amount = selectedTier === 'pro_2k' ? pricing.pro_2k.priceNgn : pricing.elite_5k.priceNgn;
 
     let isVerified = false;

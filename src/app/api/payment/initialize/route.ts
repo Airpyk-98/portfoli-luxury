@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
     }
 
     // STRICT SERVER-SIDE PRICING LOOKUP (Non-forgeable)
-    const pricing = Database.getPricing();
+    const pricing = Database.getPricingConfig();
     let amount = 5000;
     const selectedTier: TierType = tier === 'pro_2k' ? 'pro_2k' : 'elite_5k';
 
