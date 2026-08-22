@@ -24,15 +24,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('/api/portfolio')
       .then((res) => res.json())
       .then((data) => {
-        if (data.user) setUser(data.user);
+        if (data.user) {
+          setUser(data.user);
+        } else {
+          router.push('/login');
+        }
       })
-      .catch(console.error);
-  }, []);
+      .catch((err) => {
+        console.error(err);
+        router.push('/login');
+      })
+      .finally(() => setLoading(false));
+  }, [router]);
 
   const navItems = [
     { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
@@ -47,8 +56,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     router.push('/login');
   };
 
-  const username = user?.username || 'kristos';
-  const publicUrl = `/${username}`;
+  const username = user?.username || '';
+  const publicUrl = username ? `/${username}` : '#';
+
+  if (loading && !user) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="animate-pulse flex items-center gap-2 text-sm text-zinc-400 font-mono">
+          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+          Loading workspace...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans flex flex-col md:flex-row relative selection:bg-emerald-400 selection:text-black transition-colors duration-500">
@@ -80,21 +100,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           {/* User Profile Mini Bar */}
           <div className="p-3 rounded-2xl bg-black/5 dark:bg-[#0e1713]/80 border border-border flex items-center justify-between">
-            <div className="space-y-0.5">
+            <div className="space-y-0.5 overflow-hidden">
               <div className="text-xs font-bold text-foreground truncate max-w-[130px]">
-                {user?.name || 'Kristos Vance'}
+                {user?.name || user?.username || 'Creator'}
               </div>
-              <div className="text-[11px] font-mono text-emerald-700 dark:text-[#00FF87] font-bold">@{username}</div>
+              <div className="text-[11px] font-mono text-emerald-700 dark:text-[#00FF87] font-bold truncate">
+                @{username}
+              </div>
             </div>
-            <a
-              href={publicUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500 text-emerald-700 dark:text-[#00FF87] hover:text-white dark:hover:text-black border border-emerald-500/30 transition-all"
-              title="View Public Portfolio"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+            {username && (
+              <a
+                href={publicUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500 text-emerald-700 dark:text-[#00FF87] hover:text-white dark:hover:text-black border border-emerald-500/30 transition-all shrink-0"
+                title="View Public Portfolio"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            )}
           </div>
 
           {/* Navigation Links */}

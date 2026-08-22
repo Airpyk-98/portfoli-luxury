@@ -64,22 +64,8 @@ export default function LandingPage() {
         return;
       }
 
-      // Initiate Flutterwave checkout directly
-      const payRes = await fetch('/api/payment/initialize', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: portData.user.id,
-          tier,
-        }),
-      });
-
-      const payData = await payRes.json();
-      if (payData.success && payData.checkoutUrl) {
-        window.location.href = payData.checkoutUrl;
-      } else {
-        alert(payData.message || 'Payment initiation failed. Please try again.');
-      }
+      // If logged in, go to subscribe confirmation page
+      window.location.href = `/dashboard/subscribe?tier=${tier}`;
     } catch (err: any) {
       console.error(err);
       alert('Error initiating checkout: ' + err.message);

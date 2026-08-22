@@ -58,14 +58,16 @@ export async function PUT(req: Request) {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get('portfoli_session')?.value;
-    let userId = 'user_kristos_01'; // Demo fallback
-
-    if (token) {
-      const payload = verifyToken(token);
-      if (payload) {
-        userId = payload.id;
-      }
+    if (!token) {
+      return NextResponse.json({ error: 'Unauthorized. Please log in.' }, { status: 401 });
     }
+
+    const payload = verifyToken(token);
+    if (!payload || !payload.id) {
+      return NextResponse.json({ error: 'Invalid or expired session.' }, { status: 401 });
+    }
+
+    const userId = payload.id;
 
     const portfolioData = await req.json();
     const updated = Database.updatePortfolio(userId, portfolioData);

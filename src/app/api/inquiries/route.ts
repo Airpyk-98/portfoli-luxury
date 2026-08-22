@@ -7,16 +7,16 @@ export async function GET(req: Request) {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get('portfoli_session')?.value;
-    let userId = 'user_kristos_01';
-
-    if (token) {
-      const payload = verifyToken(token);
-      if (payload) {
-        userId = payload.id;
-      }
+    if (!token) {
+      return NextResponse.json({ inquiries: [] });
     }
 
-    const inquiries = Database.getInquiries(userId);
+    const payload = verifyToken(token);
+    if (!payload || !payload.id) {
+      return NextResponse.json({ error: 'Invalid session' }, { status: 401 });
+    }
+
+    const inquiries = Database.getInquiries(payload.id);
     return NextResponse.json({ inquiries });
   } catch (err: any) {
     return NextResponse.json({ error: 'Failed to fetch inquiries' }, { status: 500 });

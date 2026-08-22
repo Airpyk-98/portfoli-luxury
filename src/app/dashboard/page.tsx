@@ -89,8 +89,8 @@ export default function DashboardOverviewPage() {
     });
   });
 
-  const username = user?.username || 'kristos';
-  const publicSlug = `/${username}`;
+  const username = user?.username || '';
+  const publicSlug = username ? `/${username}` : '#';
 
   return (
     <div className="space-y-8">

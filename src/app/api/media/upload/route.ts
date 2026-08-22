@@ -10,18 +10,18 @@ export async function POST(req: Request) {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get('portfoli_session')?.value;
-    let user = Database.findUserByUsername('kristos'); // fallback
-
-    if (token) {
-      const payload = verifyToken(token);
-      if (payload) {
-        const found = Database.findUserById(payload.id);
-        if (found) user = found;
-      }
+    if (!token) {
+      return NextResponse.json({ error: 'User session required. Please log in.' }, { status: 401 });
     }
 
+    const payload = verifyToken(token);
+    if (!payload || !payload.id) {
+      return NextResponse.json({ error: 'Invalid or expired session.' }, { status: 401 });
+    }
+
+    const user = Database.findUserById(payload.id);
     if (!user) {
-      return NextResponse.json({ error: 'User session required' }, { status: 401 });
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     const formData = await req.formData();
