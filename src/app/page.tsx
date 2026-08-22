@@ -9,6 +9,8 @@ import { KineticTypography, ScrollReveal, PerspectiveTilt } from '@/components/u
 import { SamplePortfoliosModal } from '@/components/sample-portfolios-modal';
 import { HomeTemplateCarousel } from '@/components/home-template-carousel';
 import { SAMPLE_TEMPLATES } from '@/lib/sample-templates';
+import { DEFAULT_PRICING, formatBytes } from '@/lib/tiers';
+import { PricingConfig, TierType } from '@/lib/types';
 import {
   Sparkles,
   Layers,
@@ -32,6 +34,59 @@ import {
 export default function LandingPage() {
   const [isSampleModalOpen, setIsSampleModalOpen] = useState(false);
   const [selectedTemplateFilter, setSelectedTemplateFilter] = useState<string>('all');
+  const [pricing, setPricing] = useState<PricingConfig>(DEFAULT_PRICING);
+  const [purchasingTier, setPurchasingTier] = useState<TierType | null>(null);
+
+  useEffect(() => {
+    fetch('/api/admin/pricing?public=true')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.pricing) setPricing(data.pricing);
+      })
+      .catch(console.error);
+  }, []);
+
+  const handlePurchase = async (tier: TierType) => {
+    if (tier === 'free') {
+      window.location.href = '/register';
+      return;
+    }
+
+    setPurchasingTier(tier);
+    try {
+      // Check if user is already logged in
+      const portRes = await fetch('/api/portfolio');
+      const portData = await portRes.json();
+
+      if (!portData.user) {
+        // Redirect to register with tier param to complete checkout after registration
+        window.location.href = `/register?tier=${tier}`;
+        return;
+      }
+
+      // Initiate Flutterwave checkout directly
+      const payRes = await fetch('/api/payment/initialize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: portData.user.id,
+          tier,
+        }),
+      });
+
+      const payData = await payRes.json();
+      if (payData.success && payData.checkoutUrl) {
+        window.location.href = payData.checkoutUrl;
+      } else {
+        alert(payData.message || 'Payment initiation failed. Please try again.');
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert('Error initiating checkout: ' + err.message);
+    } finally {
+      setPurchasingTier(null);
+    }
+  };
 
   const filteredTemplates = SAMPLE_TEMPLATES.filter((t) => {
     if (selectedTemplateFilter === 'all') return true;
@@ -323,129 +378,148 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           {/* FREE TIER */}
           <ScrollReveal animation="fade-up" delayMs={50}>
-            <GlassCard intensity="high" className="p-7 flex flex-col justify-between space-y-6 h-full">
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-bold text-foreground font-display">Starter</h3>
-                  <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 font-normal">For beginners building their first portfolio.</p>
+            <PerspectiveTilt>
+              <GlassCard intensity="high" className="p-7 flex flex-col justify-between space-y-6 h-full">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground font-display">Starter</h3>
+                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 font-normal">For beginners building their first portfolio.</p>
+                  </div>
+
+                  <div className="pt-2">
+                    <div className="text-4xl font-black text-foreground font-mono">₦{pricing.free.priceNgn}</div>
+                    <div className="text-xs text-zinc-600 dark:text-zinc-400 font-medium">Free Forever</div>
+                  </div>
+
+                  <ul className="space-y-2.5 pt-4 border-t border-border text-xs text-zinc-800 dark:text-zinc-200 font-medium">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Max {pricing.free.maxVideos} Video
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Max {pricing.free.maxPhotos} Project Photos
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> {formatBytes(pricing.free.storageQuotaBytes)} Storage Cap
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Standard URL (portfoli.me/username)
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Carousel & Bento Display Modes
+                    </li>
+                  </ul>
                 </div>
 
-                <div className="pt-2">
-                  <div className="text-4xl font-black text-foreground font-mono">₦0</div>
-                  <div className="text-xs text-zinc-600 dark:text-zinc-400 font-medium">Free Forever</div>
-                </div>
-
-                <ul className="space-y-2.5 pt-4 border-t border-border text-xs text-zinc-800 dark:text-zinc-200 font-medium">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Max 1 Video
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Max 5 Project Photos
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> 200 MB Storage Quota
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Standard URL (portfoli.me/username)
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Carousel & Bento Display Modes
-                  </li>
-                </ul>
-              </div>
-
-              <Link href="/register" className="w-full">
-                <GlassButton variant="secondary" className="w-full text-xs font-bold">
+                <GlassButton
+                  variant="secondary"
+                  className="w-full text-xs font-bold"
+                  onClick={() => handlePurchase('free')}
+                >
                   Get Started Free
                 </GlassButton>
-              </Link>
-            </GlassCard>
+              </GlassCard>
+            </PerspectiveTilt>
           </ScrollReveal>
 
-          {/* PRO TIER (2,000 NGN) */}
+          {/* PRO TIER */}
           <ScrollReveal animation="fade-up" delayMs={150}>
-            <GlassCard intensity="ultra" glow className="p-7 flex flex-col justify-between space-y-6 relative border-emerald-500/50 h-full">
-              <div className="absolute -top-3 right-6 px-3 py-0.5 rounded-full bg-emerald-500 text-black text-[10px] font-black uppercase tracking-wider shadow-glass-glow">
-                Recommended
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-bold text-foreground font-display">Creator Pro</h3>
-                  <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 font-normal">For active developers, designers, and freelancers.</p>
+            <PerspectiveTilt>
+              <GlassCard intensity="ultra" glow className="p-7 flex flex-col justify-between space-y-6 relative border-emerald-500/50 h-full">
+                <div className="absolute -top-3 right-6 px-3 py-0.5 rounded-full bg-emerald-500 text-black text-[10px] font-black uppercase tracking-wider shadow-glass-glow">
+                  Recommended
                 </div>
 
-                <div className="pt-2">
-                  <div className="text-4xl font-black text-emerald-700 dark:text-[#00FF87] font-mono">₦2,000</div>
-                  <div className="text-xs text-zinc-600 dark:text-zinc-400 font-medium">per year (Annual Billing)</div>
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground font-display">Creator Pro</h3>
+                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 font-normal">For active developers, designers, and freelancers.</p>
+                  </div>
+
+                  <div className="pt-2">
+                    <div className="text-4xl font-black text-emerald-700 dark:text-[#00FF87] font-mono">
+                      ₦{pricing.pro_2k.priceNgn.toLocaleString()}
+                    </div>
+                    <div className="text-xs text-zinc-600 dark:text-zinc-400 font-medium">per year (Annual Billing)</div>
+                  </div>
+
+                  <ul className="space-y-2.5 pt-4 border-t border-border text-xs text-zinc-800 dark:text-zinc-200 font-medium">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Up to {pricing.pro_2k.maxVideos} Videos
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Up to {pricing.pro_2k.maxPhotos} Project Images
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> {formatBytes(pricing.pro_2k.storageQuotaBytes)} High-Speed Storage
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Side-Swipe Cards & Custom Fonts
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Daily Subscription Countdown Tracker
+                    </li>
+                  </ul>
                 </div>
 
-                <ul className="space-y-2.5 pt-4 border-t border-border text-xs text-zinc-800 dark:text-zinc-200 font-medium">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Up to 10 Videos
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Up to 70 Project Images
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> 1 GB High-Speed Storage
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Side-Swipe Cards & Custom Fonts
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Daily Subscription Countdown Tracker
-                  </li>
-                </ul>
-              </div>
-
-              <Link href="/register" className="w-full">
-                <GlassButton variant="primary" glow className="w-full text-xs font-bold">
-                  Upgrade to Pro (₦2,000/yr)
+                <GlassButton
+                  variant="primary"
+                  glow
+                  loading={purchasingTier === 'pro_2k'}
+                  onClick={() => handlePurchase('pro_2k')}
+                  className="w-full text-xs font-bold"
+                >
+                  Upgrade to Pro (₦{pricing.pro_2k.priceNgn.toLocaleString()}/yr)
                 </GlassButton>
-              </Link>
-            </GlassCard>
+              </GlassCard>
+            </PerspectiveTilt>
           </ScrollReveal>
 
-          {/* ELITE TIER (5,000 NGN) */}
+          {/* ELITE TIER */}
           <ScrollReveal animation="fade-up" delayMs={250}>
-            <GlassCard intensity="high" className="p-7 flex flex-col justify-between space-y-6 h-full">
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-xl font-bold text-foreground font-display">Elite Mastery</h3>
-                  <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 font-normal">For agencies, lead consultants, and top-tier talent.</p>
+            <PerspectiveTilt>
+              <GlassCard intensity="high" className="p-7 flex flex-col justify-between space-y-6 h-full border-cyan-500/40">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground font-display">Elite Mastery</h3>
+                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 font-normal">For agencies, lead consultants, and top-tier talent.</p>
+                  </div>
+
+                  <div className="pt-2">
+                    <div className="text-4xl font-black text-cyan-700 dark:text-cyan-300 font-mono">
+                      ₦{pricing.elite_5k.priceNgn.toLocaleString()}
+                    </div>
+                    <div className="text-xs text-zinc-600 dark:text-zinc-400 font-medium">per year (Annual Billing)</div>
+                  </div>
+
+                  <ul className="space-y-2.5 pt-4 border-t border-border text-xs text-zinc-800 dark:text-zinc-200 font-medium">
+                    <li className="flex items-center gap-2 font-bold text-cyan-800 dark:text-cyan-300">
+                      <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Dedicated Subdomain (kristos.portfoli.me)
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Unlimited Uploads (Max {formatBytes(pricing.elite_5k.storageQuotaBytes)})
+                    </li>
+                    <li className="flex items-center gap-2 font-bold text-emerald-800 dark:text-[#00FF87]">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> 3D Crystal Prism Display Mode
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Priority 4K & Ultra-HD Media Engine
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Zero &apos;Powered by portfoli&apos; Badge
+                    </li>
+                  </ul>
                 </div>
 
-                <div className="pt-2">
-                  <div className="text-4xl font-black text-cyan-700 dark:text-cyan-300 font-mono">₦5,000</div>
-                  <div className="text-xs text-zinc-600 dark:text-zinc-400 font-medium">per year (Annual Billing)</div>
-                </div>
-
-                <ul className="space-y-2.5 pt-4 border-t border-border text-xs text-zinc-800 dark:text-zinc-200 font-medium">
-                  <li className="flex items-center gap-2 font-bold text-cyan-800 dark:text-cyan-300">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Custom Subdomain (kristos.portfoli.me)
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Unlimited Uploads (Max 2GB Quota)
-                  </li>
-                  <li className="flex items-center gap-2 font-bold text-emerald-800 dark:text-[#00FF87]">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> 3D Crystal Prism Display Mode
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Priority 4K & Ultra-HD Media Engine
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Zero &apos;Powered by portfoli&apos; Badge
-                  </li>
-                </ul>
-              </div>
-
-              <Link href="/register" className="w-full">
-                <GlassButton variant="glass" className="w-full text-xs font-bold text-cyan-800 dark:text-cyan-300 border-cyan-500/50 hover:bg-cyan-50 dark:hover:bg-cyan-950/80">
-                  Claim Elite (₦5,000/yr)
+                <GlassButton
+                  variant="glass"
+                  loading={purchasingTier === 'elite_5k'}
+                  onClick={() => handlePurchase('elite_5k')}
+                  className="w-full text-xs font-bold text-cyan-800 dark:text-cyan-300 border-cyan-500/50 hover:bg-cyan-50 dark:hover:bg-cyan-950/80"
+                >
+                  Claim Elite (₦{pricing.elite_5k.priceNgn.toLocaleString()}/yr)
                 </GlassButton>
-              </Link>
-            </GlassCard>
+              </GlassCard>
+            </PerspectiveTilt>
           </ScrollReveal>
         </div>
       </section>
