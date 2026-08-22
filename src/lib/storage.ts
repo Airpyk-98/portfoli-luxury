@@ -612,7 +612,19 @@ const SEED_USERS: User[] = [
 export class Database {
   // Users & Portfolios
   static getUsers(): User[] {
-    return readJsonFile<User[]>('users.json', SEED_USERS);
+    const loaded = readJsonFile<User[]>('users.json', SEED_USERS);
+    const existingUsernames = new Set(loaded.map((u) => u.username.toLowerCase()));
+    let needsSave = false;
+    for (const seed of SEED_USERS) {
+      if (!existingUsernames.has(seed.username.toLowerCase())) {
+        loaded.push(seed);
+        needsSave = true;
+      }
+    }
+    if (needsSave) {
+      writeJsonFile('users.json', loaded);
+    }
+    return loaded;
   }
 
   static saveUsers(users: User[]): void {
@@ -621,7 +633,9 @@ export class Database {
 
   static findUserByUsername(username: string): User | null {
     const users = this.getUsers();
-    return users.find((u) => u.username.toLowerCase() === username.toLowerCase()) || null;
+    const found = users.find((u) => u.username.toLowerCase() === username.toLowerCase());
+    if (found) return found;
+    return SEED_USERS.find((u) => u.username.toLowerCase() === username.toLowerCase()) || null;
   }
 
   static findUserByEmail(email: string): User | null {
