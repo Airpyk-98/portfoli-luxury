@@ -240,27 +240,38 @@ function SubscribePageInner() {
 
         {/* Switch Plan Option */}
         <ScrollReveal animation="fade-up" delay={0.2}>
-          <GlassCard className="p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-lg bg-gradient-to-tr ${otherConfig.accent} flex items-center justify-center text-white shadow`}>
-                  {otherConfig.icon}
+          <div className="space-y-3">
+            <GlassCard className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-tr ${otherConfig.accent} flex items-center justify-center text-white shadow`}>
+                    {otherConfig.icon}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold">{otherConfig.name}</p>
+                    <p className="text-xs text-zinc-500">
+                      ₦{otherPrice.toLocaleString()}/year
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-bold">{otherConfig.name}</p>
-                  <p className="text-xs text-zinc-500">
-                    ₦{otherPrice.toLocaleString()}/year
-                  </p>
-                </div>
+                <button
+                  onClick={() => setSelectedTier(otherTierKey)}
+                  className="text-xs font-bold text-emerald-600 dark:text-[#00FF87] hover:underline cursor-pointer"
+                >
+                  Switch to {otherConfig.name}
+                </button>
               </div>
-              <button
-                onClick={() => setSelectedTier(otherTierKey)}
-                className="text-xs font-bold text-emerald-600 dark:text-[#00FF87] hover:underline"
+            </GlassCard>
+
+            <div className="text-center pt-2">
+              <Link
+                href="/dashboard/editor"
+                className="text-xs font-medium text-zinc-500 dark:text-zinc-400 hover:text-emerald-500 underline transition-colors"
               >
-                Switch to this plan
-              </button>
+                Or continue with Free Starter Plan (₦0 / 200MB) →
+              </Link>
             </div>
-          </GlassCard>
+          </div>
         </ScrollReveal>
 
         {/* Footer */}

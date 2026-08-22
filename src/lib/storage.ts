@@ -663,13 +663,32 @@ export class Database {
   static saveUser(user: User): User {
     const users = this.getUsers();
     const index = users.findIndex((u) => u.id === user.id);
+    const updatedUser = { ...user, updatedAt: new Date().toISOString() };
     if (index >= 0) {
-      users[index] = { ...user, updatedAt: new Date().toISOString() };
+      users[index] = updatedUser;
     } else {
-      users.push({ ...user, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+      updatedUser.createdAt = updatedUser.createdAt || new Date().toISOString();
+      users.push(updatedUser);
     }
     this.saveUsers(users);
-    return user;
+
+    // Sync to Firestore in background if configured
+    try {
+      const { getFirebaseAdmin } = require('./firebase-admin');
+      const { adminDb } = getFirebaseAdmin();
+      if (adminDb) {
+        adminDb.collection('users').doc(user.id).set(JSON.parse(JSON.stringify(updatedUser)), { merge: true }).catch((err: any) => console.warn('Firestore user sync warning:', err));
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    return updatedUser;
+  }
+
+  // Alias for compatibility
+  static updateUser(user: User): User {
+    return this.saveUser(user);
   }
 
   static updatePortfolio(userId: string, portfolioData: Partial<UserPortfolio>): UserPortfolio | null {
@@ -696,12 +715,32 @@ export class Database {
     users[userIndex].storageUsedBytes = totalBytes;
     this.saveUsers(users);
 
+    // Sync to Firestore
+    try {
+      const { getFirebaseAdmin } = require('./firebase-admin');
+      const { adminDb } = getFirebaseAdmin();
+      if (adminDb) {
+        adminDb.collection('users').doc(userId).set({
+          portfolio: JSON.parse(JSON.stringify(updatedPortfolio)),
+          storageUsedBytes: totalBytes,
+          updatedAt: new Date().toISOString(),
+        }, { merge: true }).catch((err: any) => console.warn('Firestore portfolio sync warning:', err));
+      }
+    } catch (e) {
+      // ignore
+    }
+
     return updatedPortfolio;
   }
 
   // Dynamic Pricing Config
   static getPricingConfig(): PricingConfig {
     return readJsonFile<PricingConfig>('pricing.json', DEFAULT_PRICING);
+  }
+
+  // Alias for compatibility
+  static getPricing(): PricingConfig {
+    return this.getPricingConfig();
   }
 
   static updatePricingConfig(config: Partial<PricingConfig>): PricingConfig {
