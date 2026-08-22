@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "@netlify/plugin-nextjs": "^5.15.13",
     "bcryptjs": "^2.4.3",
     "canvas-confetti": "^1.9.3",

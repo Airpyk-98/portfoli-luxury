@@ -672,6 +672,14 @@ export class Database {
     }
     this.saveUsers(users);
 
+    // Sync to Neon Postgres in background if configured
+    try {
+      const { saveNeonUser } = require('./neon');
+      saveNeonUser(updatedUser).catch((err: any) => console.warn('Neon user sync notice:', err));
+    } catch (e) {
+      // ignore
+    }
+
     // Sync to Firestore in background if configured
     try {
       const { getFirebaseAdmin } = require('./firebase-admin');
@@ -714,6 +722,14 @@ export class Database {
     users[userIndex].portfolio = updatedPortfolio;
     users[userIndex].storageUsedBytes = totalBytes;
     this.saveUsers(users);
+
+    // Sync to Neon
+    try {
+      const { saveNeonUser } = require('./neon');
+      saveNeonUser(users[userIndex]).catch((err: any) => console.warn('Neon portfolio sync notice:', err));
+    } catch (e) {
+      // ignore
+    }
 
     // Sync to Firestore
     try {
