@@ -64,6 +64,11 @@ export async function POST(req: NextRequest) {
         };
         user.updatedAt = now.toISOString();
 
+        // Auto-activate custom subdomain for Elite Mastery tier
+        if (tier === 'elite_5k' && !user.portfolio.customSubdomain) {
+          user.portfolio.customSubdomain = user.username;
+        }
+
         Database.updateUser(user);
 
         // Record or Update Successful Transaction

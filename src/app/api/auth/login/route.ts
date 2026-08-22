@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Database } from '@/lib/storage';
-import { comparePassword, signToken } from '@/lib/auth';
+import { comparePassword, signToken, getSessionCookieOptions, SESSION_COOKIE_NAME } from '@/lib/auth';
 
 export async function POST(req: Request) {
   try {
@@ -18,13 +18,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid credentials.' }, { status: 401 });
     }
 
-    // For seeded users without custom password, allow test login or compare hash
-    let isValid = false;
-    if (user.passwordHash.includes('Placeholder') || password === 'password123' || password === 'admin123') {
-      isValid = true;
-    } else {
-      isValid = await comparePassword(password, user.passwordHash);
-    }
+    const isValid = await comparePassword(password, user.passwordHash);
 
     if (!isValid) {
       return NextResponse.json({ error: 'Invalid credentials.' }, { status: 401 });
@@ -49,13 +43,7 @@ export async function POST(req: Request) {
       },
     });
 
-    response.cookies.set('portfoli_session', token, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 30 * 24 * 60 * 60,
-      path: '/',
-    });
+    response.cookies.set(SESSION_COOKIE_NAME, token, getSessionCookieOptions(false));
 
     return response;
   } catch (err: any) {

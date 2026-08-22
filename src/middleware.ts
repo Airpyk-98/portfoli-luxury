@@ -37,7 +37,7 @@ export function middleware(request: NextRequest) {
       subdomain = hostParts[0].toLowerCase();
     }
   } else {
-    // Custom domains e.g. "kristos.portfoli.me" has length 3
+    // Custom domains e.g. "kristos.portfoli.site" has length 3
     const hostParts = hostname.split('.');
     if (hostParts.length >= 3) {
       subdomain = hostParts[0].toLowerCase();

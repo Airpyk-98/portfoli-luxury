@@ -166,7 +166,7 @@ export default function SettingsPage() {
                 label="Standard Slug Path (Free & Pro Tier)"
                 value={username}
                 onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, ''))}
-                helper={`Your public path is: portfoli.me/${username}`}
+                helper={`Your public path is: portfoli.site/${username}`}
                 required
               />
             </div>
@@ -196,7 +196,7 @@ export default function SettingsPage() {
                   disabled={!isSubdomainUnlocked}
                   className={!isSubdomainUnlocked ? 'opacity-50 cursor-not-allowed' : ''}
                 />
-                <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 whitespace-nowrap">.portfoli.me</span>
+                <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 whitespace-nowrap">.portfoli.site</span>
               </div>
 
               {!isSubdomainUnlocked && (

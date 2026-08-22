@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
     const txRef = `portfoli_${user.username}_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
     const settings = getPaymentSettings();
 
-    const host = req.headers.get('host') || 'quirky-kepler.vercel.app';
+    const host = req.headers.get('host') || 'portfoli.site';
     const proto = host.includes('localhost') ? 'http' : 'https';
     const redirectUrl =
       returnUrl ||

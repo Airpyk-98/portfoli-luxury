@@ -86,7 +86,7 @@ const SEED_KRISTOS_PORTFOLIO: UserPortfolio = {
   location: 'Lagos & San Francisco',
   availableForHire: true,
   availabilityText: 'Available for Select Q3 Advisory & Builds',
-  emailContact: 'kristos@portfoli.me',
+  emailContact: 'kristos@portfoli.site',
   phoneContact: '+234 812 345 6789',
   calendlyUrl: 'https://calendly.com',
   theme: {
@@ -477,7 +477,7 @@ const SEED_ZARA_PORTFOLIO: UserPortfolio = {
 const SEED_USERS: User[] = [
   {
     id: 'user_kristos_01',
-    email: 'kristos@portfoli.me',
+    email: 'kristos@portfoli.site',
     username: 'kristos',
     passwordHash: '$2a$10$YourHashedPasswordHerePlaceholder',
     name: 'Kristos Vance',
@@ -498,7 +498,7 @@ const SEED_USERS: User[] = [
   },
   {
     id: 'user_elena_01',
-    email: 'elena@portfoli.me',
+    email: 'elena@portfoli.site',
     username: 'elena',
     passwordHash: '$2a$10$YourHashedPasswordHerePlaceholder',
     name: 'Elena Rostova',
@@ -519,7 +519,7 @@ const SEED_USERS: User[] = [
   },
   {
     id: 'user_marcus_01',
-    email: 'marcus@portfoli.me',
+    email: 'marcus@portfoli.site',
     username: 'marcus',
     passwordHash: '$2a$10$YourHashedPasswordHerePlaceholder',
     name: 'Marcus Thorne',
@@ -540,7 +540,7 @@ const SEED_USERS: User[] = [
   },
   {
     id: 'user_sora_01',
-    email: 'sora@portfoli.me',
+    email: 'sora@portfoli.site',
     username: 'sora',
     passwordHash: '$2a$10$YourHashedPasswordHerePlaceholder',
     name: 'Dr. Sora Tanaka',
@@ -561,7 +561,7 @@ const SEED_USERS: User[] = [
   },
   {
     id: 'user_zara_01',
-    email: 'zara@portfoli.me',
+    email: 'zara@portfoli.site',
     username: 'zara',
     passwordHash: '$2a$10$YourHashedPasswordHerePlaceholder',
     name: 'Zara Sterling',
@@ -582,7 +582,7 @@ const SEED_USERS: User[] = [
   },
   {
     id: 'user_admin_01',
-    email: 'admin@portfoli.me',
+    email: 'admin@portfoli.site',
     username: 'admin',
     passwordHash: '$2a$10$AdminHashedPasswordHerePlaceholder',
     name: 'Portfoli Master Admin',

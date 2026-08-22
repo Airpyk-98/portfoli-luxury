@@ -134,7 +134,7 @@ export default function PricingPage() {
                       <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> {formatBytes(pricing.free.storageQuotaBytes)} Storage Cap
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Standard URL (portfoli.me/username)
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Standard URL (portfoli.site/username)
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Carousel & Bento Display Modes
@@ -221,7 +221,7 @@ export default function PricingPage() {
 
                   <ul className="space-y-2.5 pt-4 border-t border-border text-xs text-zinc-800 dark:text-zinc-200 font-medium">
                     <li className="flex items-center gap-2 font-bold text-cyan-800 dark:text-cyan-300">
-                      <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Dedicated Subdomain (kristos.portfoli.me)
+                      <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Dedicated Subdomain (kristos.portfoli.site)
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Unlimited Uploads (Max {formatBytes(pricing.elite_5k.storageQuotaBytes)})

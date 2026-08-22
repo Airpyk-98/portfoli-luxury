@@ -158,11 +158,11 @@ export default function RegisterPage() {
                     helper={
                       username
                         ? usernameAvailable === true
-                          ? `✓ portfoli.me/${username} is available!`
+                          ? `✓ portfoli.site/${username} is available!`
                           : usernameAvailable === false
                           ? `✗ @${username} is already claimed.`
                           : `Choose 3+ letters or numbers.`
-                        : `Your public slug: portfoli.me/yourname`
+                        : `Your public slug: portfoli.site/yourname`
                     }
                     required
                   />

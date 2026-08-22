@@ -19,9 +19,9 @@
 
 | Tier | Price | Video Limit | Image Limit | Storage Quota | URL / Subdomain | Key Features |
 |---|---|---|---|---|---|---|
-| **Free Starter** | ₦0 / yr | 1 Video | 5 Photos | 200 MB | `portfoli.me/username` | Carousel & Bento Grid Modes |
-| **Creator Pro** | ₦2,000 / yr | 10 Videos | 70 Photos | 1 GB | `portfoli.me/username` | Side-Swipe Cards, Custom Fonts, Daily Countdown |
-| **Elite Mastery** | ₦5,000 / yr | Unlimited | Unlimited | 2 GB (Hard Cap) | `username.portfoli.me` (Custom Subdomain) | 3D Crystal Prism, Kaggle WebM Video Pipeline, Zero Branding |
+| **Free Starter** | ₦0 / yr | 1 Video | 5 Photos | 200 MB | `portfoli.site/username` | Carousel & Bento Grid Modes |
+| **Creator Pro** | ₦2,000 / yr | 10 Videos | 70 Photos | 1 GB | `portfoli.site/username` | Side-Swipe Cards, Custom Fonts, Daily Countdown |
+| **Elite Mastery** | ₦5,000 / yr | Unlimited | Unlimited | 2 GB (Hard Cap) | `username.portfoli.site` (Custom Subdomain) | 3D Crystal Prism, Kaggle WebM Video Pipeline, Zero Branding |
 
 ---
 
@@ -32,8 +32,8 @@ flowchart TD
     subgraph STAGE1 ["1. ONBOARDING & ROUTING GATEWAY"]
         A1["User Registration / Login"] --> A2["Unique Username / Slug Claim"]
         A2 --> A3{"Tier Validation"}
-        A3 -->|Free / 2k Pro| A4["Route: portfoli.me/{username}"]
-        A3 -->|5k Elite Tier| A5["Route: {username}.portfoli.me + Slug"]
+        A3 -->|Free / 2k Pro| A4["Route: portfoli.site/{username}"]
+        A3 -->|5k Elite Tier| A5["Route: {username}.portfoli.site + Slug"]
     end
 
     subgraph STAGE2 ["2. PORTFOLIO STUDIO (CRUD ENGINE)"]

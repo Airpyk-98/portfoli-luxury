@@ -5,18 +5,25 @@ import {
   getMaskedPaymentSettings,
   getLiveRevenueStats,
 } from '@/lib/payment-settings';
+import { isAuthorizedAdmin } from '@/lib/admin-auth';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function GET(req: NextRequest) {
   try {
+    if (!isAuthorizedAdmin(req)) {
+      return NextResponse.json({ error: 'Master Admin authorization required.' }, { status: 401 });
+    }
+
     const maskedSettings = getMaskedPaymentSettings();
     const liveStats = getLiveRevenueStats();
 
-    const host = req.headers.get('host') || 'quirky-kepler.vercel.app';
+    const host = req.headers.get('host') || 'portfoli.site';
     const proto = host.includes('localhost') ? 'http' : 'https';
-    const webhookEndpoint = `${proto}://${host}/api/webhooks/flutterwave`;
+    const webhookEndpoint = host.includes('localhost')
+      ? `${proto}://${host}/api/webhooks/flutterwave`
+      : `https://portfoli.site/api/webhooks/flutterwave`;
 
     return NextResponse.json({
       success: true,
@@ -34,6 +41,10 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    if (!isAuthorizedAdmin(req)) {
+      return NextResponse.json({ error: 'Master Admin authorization required.' }, { status: 401 });
+    }
+
     const body = await req.json();
     const current = getPaymentSettings();
 

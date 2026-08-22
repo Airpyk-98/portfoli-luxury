@@ -6,26 +6,33 @@ import Script from 'next/script';
 
 export function GTMScript() {
   const pathname = usePathname();
-  const [gtmId, setGtmId] = useState<string>('');
-  const [ga4Id, setGa4Id] = useState<string>('');
+  const [gtmId, setGtmId] = useState<string>(
+    process.env.NEXT_PUBLIC_GTM_ID || 'GTM-PORTFOLI2026'
+  );
+  const [ga4Id, setGa4Id] = useState<string>(
+    process.env.NEXT_PUBLIC_GA4_ID || ''
+  );
 
   useEffect(() => {
-    // Fetch active GTM / GA4 IDs configured in Admin Portal
+    // If admin authorized or custom settings available, fetch custom configured IDs
     fetch('/api/admin/payment-settings')
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) return null;
+        return res.json();
+      })
       .then((data) => {
-        if (data.settings?.gtmContainerId) {
+        if (data?.settings?.gtmContainerId) {
           setGtmId(data.settings.gtmContainerId.trim());
         }
-        if (data.settings?.ga4MeasurementId) {
+        if (data?.settings?.ga4MeasurementId) {
           setGa4Id(data.settings.ga4MeasurementId.trim());
         }
       })
       .catch(() => {});
   }, []);
 
-  // STRICT RULE: Exclude Google Tag Manager from all /admin pages
-  if (pathname && pathname.startsWith('/admin')) {
+  // STRICT RULE: Exclude Google Tag Manager and analytics from all /admin pages
+  if (pathname && (pathname === '/admin' || pathname.startsWith('/admin/'))) {
     return null;
   }
 

@@ -617,7 +617,7 @@ export default function AdminControlPage() {
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-1 hover:underline text-[11px]"
                               >
-                                portfoli.me/{u.username}
+                                portfoli.site/{u.username}
                                 <ExternalLink className="w-3 h-3 text-zinc-500" />
                               </a>
                             </td>

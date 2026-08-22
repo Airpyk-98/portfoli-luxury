@@ -208,11 +208,11 @@ export default function LandingPage() {
             <Globe className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" />
             <span>Claim your custom link:</span>
             <span className="font-bold bg-white dark:bg-white/10 px-2.5 py-1 rounded-md border border-border text-foreground">
-              portfoli.me/<span className="text-emerald-700 dark:text-[#00FF87]">yourname</span>
+              portfoli.site/<span className="text-emerald-700 dark:text-[#00FF87]">yourname</span>
             </span>
             <span className="text-zinc-500">or</span>
             <span className="font-bold bg-white dark:bg-white/10 px-2.5 py-1 rounded-md border border-emerald-500/40 text-emerald-800 dark:text-emerald-300">
-              <span className="text-emerald-700 dark:text-[#00FF87]">yourname</span>.portfoli.me
+              <span className="text-emerald-700 dark:text-[#00FF87]">yourname</span>.portfoli.site
             </span>
           </div>
         </ScrollReveal>
@@ -229,7 +229,7 @@ export default function LandingPage() {
                     <div className="w-3 h-3 rounded-full bg-rose-500/80" />
                     <div className="w-3 h-3 rounded-full bg-amber-500/80" />
                     <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                    <span className="text-xs font-mono text-zinc-600 dark:text-zinc-400 ml-2 font-semibold">kristos.portfoli.me</span>
+                    <span className="text-xs font-mono text-zinc-600 dark:text-zinc-400 ml-2 font-semibold">kristos.portfoli.site</span>
                   </div>
                   <span className="text-xs font-mono text-emerald-800 dark:text-[#00FF87] px-2.5 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-400/40 font-bold">
                     3D CRYSTAL PRISM ENGINE ACTIVE
@@ -321,7 +321,7 @@ export default function LandingPage() {
             {
               icon: Globe,
               title: 'Subdomains & Slugs',
-              desc: 'Claim your unique name on portfoli.me/kristos or unlock dedicated subdomains on kristos.portfoli.me.',
+              desc: 'Claim your unique name on portfoli.site/kristos or unlock dedicated subdomains on kristos.portfoli.site.',
             },
             {
               icon: Sliders,
@@ -402,7 +402,7 @@ export default function LandingPage() {
                       <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> {formatBytes(pricing.free.storageQuotaBytes)} Storage Cap
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Standard URL (portfoli.me/username)
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Standard URL (portfoli.site/username)
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-[#00FF87]" /> Carousel & Bento Display Modes
@@ -493,7 +493,7 @@ export default function LandingPage() {
 
                   <ul className="space-y-2.5 pt-4 border-t border-border text-xs text-zinc-800 dark:text-zinc-200 font-medium">
                     <li className="flex items-center gap-2 font-bold text-cyan-800 dark:text-cyan-300">
-                      <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Dedicated Subdomain (kristos.portfoli.me)
+                      <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Dedicated Subdomain (kristos.portfoli.site)
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-cyan-400" /> Unlimited Uploads (Max {formatBytes(pricing.elite_5k.storageQuotaBytes)})

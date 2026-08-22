@@ -6,6 +6,29 @@ import { TierType } from '@/lib/types';
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
+/**
+ * Flutterwave v4 OAuth 2.0 Token Generation for Verification
+ */
+async function getV4OAuthToken(clientId: string, clientSecret: string): Promise<string | null> {
+  try {
+    if (!clientId || !clientSecret) return null;
+    const params = new URLSearchParams();
+    params.append('client_id', clientId.trim());
+    params.append('client_secret', clientSecret.trim());
+    params.append('grant_type', 'client_credentials');
+    const res = await fetch('https://idp.flutterwave.com/realms/flutterwave/protocol/openid-connect/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString(),
+    });
+    const data = await res.json();
+    return data.access_token || null;
+  } catch (err) {
+    console.error('V4 OAuth token error during verification:', err);
+    return null;
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -28,27 +51,42 @@ export async function POST(req: NextRequest) {
     let isVerified = false;
     let flwRef = transactionId;
 
-    // Verify against Flutterwave API if secret key exists and transactionId passed
-    if (settings.secretKey && transactionId) {
-      try {
-        const verifyRes = await fetch(`https://api.flutterwave.com/v3/transactions/${transactionId}/verify`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${settings.secretKey}`,
-          },
-        });
+    // Verify against Flutterwave API if credentials exist and transactionId passed
+    if (transactionId) {
+      // Build auth header: prefer V4 OAuth, fallback to Secret Key
+      let authHeader = '';
+      if (settings.clientId && settings.clientSecret) {
+        const v4Token = await getV4OAuthToken(settings.clientId, settings.clientSecret);
+        if (v4Token) authHeader = `Bearer ${v4Token}`;
+      }
+      if (!authHeader && settings.secretKey) {
+        authHeader = `Bearer ${settings.secretKey}`;
+      }
 
-        const verifyData = await verifyRes.json();
-        if (verifyData.status === 'success' && verifyData.data?.status === 'successful') {
-          isVerified = true;
-          flwRef = verifyData.data.flw_ref || transactionId;
+      if (authHeader) {
+        try {
+          const verifyRes = await fetch(`https://api.flutterwave.com/v3/transactions/${transactionId}/verify`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: authHeader,
+            },
+          });
+
+          const verifyData = await verifyRes.json();
+          if (verifyData.status === 'success' && verifyData.data?.status === 'successful') {
+            isVerified = true;
+            flwRef = verifyData.data.flw_ref || transactionId;
+          }
+        } catch (err) {
+          console.error('Flutterwave direct verification error:', err);
         }
-      } catch (err) {
-        console.error('Flutterwave direct verification error:', err);
+      } else {
+        // No credentials configured — sandbox/dev flow
+        isVerified = true;
       }
     } else {
-      // In sandbox / direct return flow
+      // No transactionId — sandbox / direct return flow
       isVerified = true;
     }
 
@@ -67,6 +105,11 @@ export async function POST(req: NextRequest) {
         lastPaymentRef: txRef || `flw_${transactionId}`,
       };
       user.updatedAt = now.toISOString();
+
+      // Auto-activate custom subdomain for Elite Mastery tier
+      if (selectedTier === 'elite_5k' && !user.portfolio.customSubdomain) {
+        user.portfolio.customSubdomain = user.username;
+      }
 
       Database.updateUser(user);
 

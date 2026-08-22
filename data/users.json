@@ -1,7 +1,7 @@
 [
   {
     "id": "user_kristos_01",
-    "email": "kristos@portfoli.me",
+    "email": "kristos@portfoli.site",
     "username": "kristos",
     "name": "Kristos Vance",
     "role": "user",
@@ -23,7 +23,7 @@
       "location": "Lagos & San Francisco",
       "availableForHire": true,
       "availabilityText": "Available for Select Q3 Advisory & Builds",
-      "emailContact": "kristos@portfoli.me",
+      "emailContact": "kristos@portfoli.site",
       "phoneContact": "+234 812 345 6789",
       "calendlyUrl": "https://calendly.com",
       "theme": {
@@ -111,7 +111,7 @@
           "id": "srv_01",
           "title": "High-Fidelity Spatial UI Architecture",
           "description": "Full-scope spatial UI, WebGL micro-interactions, responsive design systems, and glassmorphic frontend code.",
-          "priceFormatted": "\u20a61,200,000",
+          "priceFormatted": "₦1,200,000",
           "billingType": "project",
           "deliveryTime": "3-4 Weeks",
           "features": [
@@ -128,11 +128,13 @@
       "viewsCount": 1420,
       "createdAt": "2026-06-20T14:23:36.822Z",
       "updatedAt": "2026-08-22T08:00:00.000Z"
-    }
+    },
+    "passwordHash": "18d732168abef41d43a0a1dc3eff07ba:9d1383262a35d78f91f3ac71303d4be62faeefb53c8a9408b675ad32f42d3fbcfdd2845b32029066a38e7f779069137d2d11b5fa3253e996e7aaacdaf0ef520d",
+    "updatedAt": "2026-08-22T09:46:01.464Z"
   },
   {
     "id": "user_elena_01",
-    "email": "elena@portfoli.me",
+    "email": "elena@portfoli.site",
     "username": "elena",
     "name": "Elena Rostova",
     "role": "user",
@@ -154,7 +156,7 @@
       "location": "Paris & London",
       "availableForHire": true,
       "availabilityText": "Available for Select Q3 Advisory & Builds",
-      "emailContact": "elena@portfoli.me",
+      "emailContact": "elena@portfoli.site",
       "phoneContact": "+234 812 345 6789",
       "calendlyUrl": "https://calendly.com",
       "theme": {
@@ -256,7 +258,7 @@
           "id": "srv_01",
           "title": "High-Fidelity Spatial UI Architecture",
           "description": "Full-scope spatial UI, WebGL micro-interactions, responsive design systems, and glassmorphic frontend code.",
-          "priceFormatted": "\u20a61,200,000",
+          "priceFormatted": "₦1,200,000",
           "billingType": "project",
           "deliveryTime": "3-4 Weeks",
           "features": [
@@ -273,11 +275,13 @@
       "viewsCount": 1420,
       "createdAt": "2026-06-20T14:23:36.822Z",
       "updatedAt": "2026-08-22T08:00:00.000Z"
-    }
+    },
+    "passwordHash": "291a4fcf53a155a3d6f228af523a005d:4e0482afd4d620e73d30388a37879bb03bc2459aad4d8d79c56e8be9e6fb6ef0e59883f68dbe3427fb4c6efe8fa22465119eedc1cdc1da13be7a739a9a3a6618",
+    "updatedAt": "2026-08-22T09:50:33.780Z"
   },
   {
     "id": "user_marcus_01",
-    "email": "marcus@portfoli.me",
+    "email": "marcus@portfoli.site",
     "username": "marcus",
     "name": "Marcus Thorne",
     "role": "user",
@@ -299,7 +303,7 @@
       "location": "London & Los Angeles",
       "availableForHire": true,
       "availabilityText": "Available for Select Q3 Advisory & Builds",
-      "emailContact": "marcus@portfoli.me",
+      "emailContact": "marcus@portfoli.site",
       "phoneContact": "+234 812 345 6789",
       "calendlyUrl": "https://calendly.com",
       "theme": {
@@ -375,7 +379,7 @@
           "id": "srv_01",
           "title": "High-Fidelity Spatial UI Architecture",
           "description": "Full-scope spatial UI, WebGL micro-interactions, responsive design systems, and glassmorphic frontend code.",
-          "priceFormatted": "\u20a61,200,000",
+          "priceFormatted": "₦1,200,000",
           "billingType": "project",
           "deliveryTime": "3-4 Weeks",
           "features": [
@@ -392,11 +396,13 @@
       "viewsCount": 1420,
       "createdAt": "2026-06-20T14:23:36.822Z",
       "updatedAt": "2026-08-22T08:00:00.000Z"
-    }
+    },
+    "passwordHash": "073e4d8587afa951dbad75a930abf24b:f888b5df085cf68af67dd0d4e7c62600d424e256e604354780de4df6d9b1760e2e0a45866fab0f49aecd29f31364c378856d7efed1fd48079cff38f429271515",
+    "updatedAt": "2026-08-22T09:46:22.791Z"
   },
   {
     "id": "user_sora_01",
-    "email": "sora@portfoli.me",
+    "email": "sora@portfoli.site",
     "username": "sora",
     "name": "Dr. Sora Tanaka",
     "role": "user",
@@ -418,7 +424,7 @@
       "location": "Tokyo & Zurich",
       "availableForHire": true,
       "availabilityText": "Available for Select Q3 Advisory & Builds",
-      "emailContact": "sora@portfoli.me",
+      "emailContact": "sora@portfoli.site",
       "phoneContact": "+234 812 345 6789",
       "calendlyUrl": "https://calendly.com",
       "theme": {
@@ -493,7 +499,7 @@
           "id": "srv_01",
           "title": "High-Fidelity Spatial UI Architecture",
           "description": "Full-scope spatial UI, WebGL micro-interactions, responsive design systems, and glassmorphic frontend code.",
-          "priceFormatted": "\u20a61,200,000",
+          "priceFormatted": "₦1,200,000",
           "billingType": "project",
           "deliveryTime": "3-4 Weeks",
           "features": [
@@ -510,11 +516,13 @@
       "viewsCount": 1420,
       "createdAt": "2026-06-20T14:23:36.822Z",
       "updatedAt": "2026-08-22T08:00:00.000Z"
-    }
+    },
+    "passwordHash": "1e9f812be713027e483c7eedf1b09abd:48c67ecc283cc0d43e6f3dcd777f412beae87c6bb884d4444d3a952f347c3d59079bbf674875ee0072234f4d7b736be6897083e749019bc2ad697123173bb8ef",
+    "updatedAt": "2026-08-22T09:55:35.556Z"
   },
   {
     "id": "user_zara_01",
-    "email": "zara@portfoli.me",
+    "email": "zara@portfoli.site",
     "username": "zara",
     "name": "Zara Sterling",
     "role": "user",
@@ -536,7 +544,7 @@
       "location": "New York & Singapore",
       "availableForHire": true,
       "availabilityText": "Available for Select Q3 Advisory & Builds",
-      "emailContact": "zara@portfoli.me",
+      "emailContact": "zara@portfoli.site",
       "phoneContact": "+234 812 345 6789",
       "calendlyUrl": "https://calendly.com",
       "theme": {
@@ -612,7 +620,7 @@
           "id": "srv_01",
           "title": "High-Fidelity Spatial UI Architecture",
           "description": "Full-scope spatial UI, WebGL micro-interactions, responsive design systems, and glassmorphic frontend code.",
-          "priceFormatted": "\u20a61,200,000",
+          "priceFormatted": "₦1,200,000",
           "billingType": "project",
           "deliveryTime": "3-4 Weeks",
           "features": [
@@ -629,11 +637,12 @@
       "viewsCount": 1420,
       "createdAt": "2026-06-20T14:23:36.822Z",
       "updatedAt": "2026-08-22T08:00:00.000Z"
-    }
+    },
+    "passwordHash": "$2a$10$YourHashedPasswordHerePlaceholder"
   },
   {
     "id": "user_admin_01",
-    "email": "admin@portfoli.me",
+    "email": "admin@portfoli.site",
     "username": "admin",
     "name": "Portfoli Master Admin",
     "role": "admin",
@@ -655,7 +664,7 @@
       "location": "Lagos & San Francisco",
       "availableForHire": true,
       "availabilityText": "Available for Select Q3 Advisory & Builds",
-      "emailContact": "kristos@portfoli.me",
+      "emailContact": "kristos@portfoli.site",
       "phoneContact": "+234 812 345 6789",
       "calendlyUrl": "https://calendly.com",
       "theme": {
@@ -743,7 +752,7 @@
           "id": "srv_01",
           "title": "High-Fidelity Spatial UI Architecture",
           "description": "Full-scope spatial UI, WebGL micro-interactions, responsive design systems, and glassmorphic frontend code.",
-          "priceFormatted": "\u20a61,200,000",
+          "priceFormatted": "₦1,200,000",
           "billingType": "project",
           "deliveryTime": "3-4 Weeks",
           "features": [
@@ -760,6 +769,7 @@
       "viewsCount": 1420,
       "createdAt": "2026-06-20T14:23:36.822Z",
       "updatedAt": "2026-08-22T08:00:00.000Z"
-    }
+    },
+    "passwordHash": "$2a$10$YourHashedPasswordHerePlaceholder"
   }
 ]

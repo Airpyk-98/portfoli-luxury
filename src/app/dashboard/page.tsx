@@ -225,7 +225,7 @@ export default function DashboardOverviewPage() {
                 rel="noopener noreferrer"
                 className="font-mono text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 font-bold"
               >
-                portfoli.me/{username} <ArrowUpRight className="w-3.5 h-3.5" />
+                portfoli.site/{username} <ArrowUpRight className="w-3.5 h-3.5" />
               </a>
             </div>
 
@@ -233,7 +233,7 @@ export default function DashboardOverviewPage() {
               <span className="text-zinc-500 dark:text-zinc-400">Custom Subdomain:</span>
               {user?.subscription?.tier === 'elite_5k' ? (
                 <span className="font-mono text-cyan-600 dark:text-cyan-400 font-bold">
-                  {username}.portfoli.me (Active)
+                  {username}.portfoli.site (Active)
                 </span>
               ) : (
                 <Link
