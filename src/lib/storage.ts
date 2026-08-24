@@ -627,6 +627,17 @@ export class Database {
     return loaded;
   }
 
+  static async getUsersAsync(): Promise<User[]> {
+    try {
+      const { getNeonUsers } = require('./neon');
+      const neonUsers = await getNeonUsers();
+      if (neonUsers && neonUsers.length > 0) {
+        return neonUsers;
+      }
+    } catch (e) {}
+    return this.getUsers();
+  }
+
   static saveUsers(users: User[]): void {
     writeJsonFile('users.json', users);
   }

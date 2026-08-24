@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!username) {
     return { title: 'Portfolio Not Found — portfoli' };
   }
-  const user = Database.findUserByUsername(username);
+  const user = await Database.findUserByUsernameAsync(username);
   if (!user || !user.portfolio) {
     return {
       title: 'Portfolio Not Found — portfoli',
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PublicPortfolioPage({ params }: Props) {
   const username = params?.username;
-  const user = username ? Database.findUserByUsername(username) : null;
+  const user = username ? await Database.findUserByUsernameAsync(username) : null;
 
   if (!user || !user.portfolio) {
     return (

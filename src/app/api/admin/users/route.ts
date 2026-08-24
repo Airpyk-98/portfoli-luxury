@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Master Admin authorization required.' }, { status: 403 });
     }
 
-    const rawUsers = Database.getUsers();
+    const rawUsers = await Database.getUsersAsync();
     let totalStorageUsedBytes = 0;
     let totalRevenue = 0;
     let paidSubscribers = 0;
