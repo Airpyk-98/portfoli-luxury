@@ -73,14 +73,64 @@ function SubscribePageInner() {
       });
 
       const payData = await payRes.json();
+
       if (payData.success && payData.checkoutUrl) {
         window.location.href = payData.checkoutUrl;
-      } else {
-        setError(payData.message || 'Payment initiation failed. Please try again.');
+        return;
       }
+
+      if (payData.success && payData.inlineConfig) {
+        // Load Flutterwave inline modal script dynamically
+        if (!(window as any).FlutterwaveCheckout) {
+          await new Promise<void>((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.flutterwave.com/v3.js';
+            script.async = true;
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error('Failed to load Flutterwave checkout modal'));
+            document.body.appendChild(script);
+          });
+        }
+
+        if ((window as any).FlutterwaveCheckout) {
+          (window as any).FlutterwaveCheckout({
+            ...payData.inlineConfig,
+            callback: async function (response: any) {
+              try {
+                const verifyRes = await fetch('/api/payment/verify', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    userId: user.id,
+                    tier: selectedTier,
+                    txRef: payData.txRef,
+                    transactionId: response.transaction_id || response.id,
+                  }),
+                });
+                const verifyData = await verifyRes.json();
+                if (verifyData.success) {
+                  window.location.href = '/dashboard?payment=success';
+                } else {
+                  setError(verifyData.message || 'Payment verification failed.');
+                  setPaying(false);
+                }
+              } catch (e) {
+                setError('Verification error. Please contact support.');
+                setPaying(false);
+              }
+            },
+            onclose: function () {
+              setPaying(false);
+            },
+          });
+          return;
+        }
+      }
+
+      setError(payData.message || 'Payment initiation failed. Please try again.');
+      setPaying(false);
     } catch (err: any) {
-      setError('Connection error. Please try again.');
-    } finally {
+      setError(err.message || 'Connection error. Please try again.');
       setPaying(false);
     }
   };

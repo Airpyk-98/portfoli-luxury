@@ -138,22 +138,72 @@ export async function POST(req: NextRequest) {
 
     // 3. Initiate payment with Flutterwave API
     try {
-      const flwResponse = await fetch('https://api.flutterwave.com/v3/payments', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: authHeader,
-        },
-        body: JSON.stringify({
-          tx_ref: txRef,
-          amount: amount,
+      let hostedLink: string | null = null;
+
+      if (authHeader) {
+        try {
+          const flwResponse = await fetch('https://api.flutterwave.com/v3/payments', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: authHeader,
+            },
+            body: JSON.stringify({
+              tx_ref: txRef,
+              amount: amount,
+              currency: 'NGN',
+              redirect_url: redirectUrl,
+              meta: {
+                userId: user.id,
+                username: user.username,
+                tier: selectedTier,
+              },
+              customer: {
+                email: user.email,
+                name: user.name || user.displayName || user.username,
+              },
+              customizations: {
+                title: 'portfoli — Luxury Portfolio Subscription',
+                description: `1-Year Access to ${selectedTier === 'elite_5k' ? 'Elite 5GB' : 'Pro 1GB'} Architecture & Custom Subdomain`,
+                logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&auto=format&fit=crop&q=80',
+              },
+            }),
+          });
+
+          const flwData = await flwResponse.json();
+          if (flwData.status === 'success' && flwData.data?.link) {
+            hostedLink = flwData.data.link;
+          }
+        } catch (e) {
+          console.warn('Flutterwave hosted link notice:', e);
+        }
+      }
+
+      if (hostedLink) {
+        return NextResponse.json({
+          success: true,
+          checkoutUrl: hostedLink,
+          txRef,
+          amount,
           currency: 'NGN',
-          redirect_url: redirectUrl,
-          meta: {
-            userId: user.id,
-            username: user.username,
-            tier: selectedTier,
-          },
+          tier: selectedTier,
+          v4Authenticated: Boolean(settings.clientId && settings.clientSecret),
+        });
+      }
+
+      // Return Inline Modal Configuration for client-side Flutterwave modal
+      return NextResponse.json({
+        success: true,
+        txRef,
+        amount,
+        currency: 'NGN',
+        tier: selectedTier,
+        inlineConfig: {
+          public_key: settings.publicKey || 'FLWPUBK_LIVE-bd08bd614ef548aabd9754baa6cb8e94',
+          tx_ref: txRef,
+          amount,
+          currency: 'NGN',
+          payment_options: 'card,banktransfer,ussd,opay',
           customer: {
             email: user.email,
             name: user.name || user.displayName || user.username,
@@ -163,29 +213,8 @@ export async function POST(req: NextRequest) {
             description: `1-Year Access to ${selectedTier === 'elite_5k' ? 'Elite 5GB' : 'Pro 1GB'} Architecture & Custom Subdomain`,
             logo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&auto=format&fit=crop&q=80',
           },
-        }),
+        },
       });
-
-      const flwData = await flwResponse.json();
-
-      if (flwData.status === 'success' && flwData.data?.link) {
-        return NextResponse.json({
-          success: true,
-          checkoutUrl: flwData.data.link,
-          txRef,
-          amount,
-          currency: 'NGN',
-          tier: selectedTier,
-          v4Authenticated: Boolean(settings.clientId && settings.clientSecret),
-        });
-      } else {
-        console.error('Flutterwave payments API error response:', flwData);
-        return NextResponse.json({
-          success: false,
-          message: flwData.message || 'Flutterwave failed to generate checkout link. Please check credentials.',
-          details: flwData,
-        }, { status: 400 });
-      }
     } catch (flwErr: any) {
       console.error('Error connecting to Flutterwave API:', flwErr);
       return NextResponse.json({
