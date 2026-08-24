@@ -113,7 +113,23 @@ export async function POST(req: NextRequest) {
     };
     saveTransaction(transaction);
 
-    // 1. Check for v4 OAuth 2.0 (Client ID & Client Secret)
+    // 1. Check if Test / Sandbox mode is active
+    if (settings.environment === 'test') {
+      return NextResponse.json({
+        success: true,
+        isSandbox: true,
+        txRef,
+        amount,
+        currency: 'NGN',
+        tier: selectedTier,
+        sandboxDetails: {
+          clientId: settings.clientId || '0cdcb25c-c586-4ed6-bed5-5dbeab11afcf',
+          environment: 'test',
+        },
+      });
+    }
+
+    // 2. Check for v4 OAuth 2.0 (Client ID & Client Secret)
     let authHeader = '';
     if (settings.clientId && settings.clientSecret) {
       const v4Token = await getV4OAuthToken(settings.clientId, settings.clientSecret);
@@ -124,7 +140,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 2. Fallback to Secret Key if v4 OAuth is not configured
+    // 3. Fallback to Secret Key if v4 OAuth is not configured
     if (!authHeader && settings.secretKey) {
       authHeader = `Bearer ${settings.secretKey.trim()}`;
     }

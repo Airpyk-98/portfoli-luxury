@@ -57,6 +57,10 @@ function SubscribePageInner() {
       .catch(console.error);
   }, [selectedTier]);
 
+  const [showSandboxModal, setShowSandboxModal] = useState(false);
+  const [sandboxData, setSandboxData] = useState<any>(null);
+  const [sandboxSimulating, setSandboxSimulating] = useState(false);
+
   const handleProceedToPayment = async () => {
     if (!user) return;
     setPaying(true);
@@ -73,6 +77,14 @@ function SubscribePageInner() {
       });
 
       const payData = await payRes.json();
+
+      // Check if Test / Sandbox mode is active
+      if (payData.success && payData.isSandbox) {
+        setSandboxData(payData);
+        setShowSandboxModal(true);
+        setPaying(false);
+        return;
+      }
 
       if (payData.success && payData.checkoutUrl) {
         window.location.href = payData.checkoutUrl;
@@ -132,6 +144,44 @@ function SubscribePageInner() {
     } catch (err: any) {
       setError(err.message || 'Connection error. Please try again.');
       setPaying(false);
+    }
+  };
+
+  const handleExecuteSandboxPayment = async (simulateSuccess: boolean) => {
+    if (!sandboxData || !user) return;
+    setSandboxSimulating(true);
+
+    if (!simulateSuccess) {
+      setTimeout(() => {
+        setError('Payment Failed: Simulated card decline or insufficient funds in test mode.');
+        setShowSandboxModal(false);
+        setSandboxSimulating(false);
+      }, 700);
+      return;
+    }
+
+    try {
+      const verifyRes = await fetch('/api/payment/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          tier: selectedTier,
+          txRef: sandboxData.txRef,
+          transactionId: `test_flw_${Date.now()}`,
+        }),
+      });
+
+      const verifyData = await verifyRes.json();
+      if (verifyData.success) {
+        window.location.href = '/dashboard?payment=success';
+      } else {
+        setError(verifyData.message || 'Sandbox verification failed.');
+        setSandboxSimulating(false);
+      }
+    } catch (e: any) {
+      setError('Sandbox execution error. Please try again.');
+      setSandboxSimulating(false);
     }
   };
 
@@ -335,6 +385,78 @@ function SubscribePageInner() {
           </p>
         </div>
       </div>
+
+      {/* Flutterwave Sandbox Test Modal */}
+      {showSandboxModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="max-w-md w-full bg-[#0d1712] border border-amber-500/40 rounded-2xl p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                  TEST SANDBOX MODE
+                </span>
+              </div>
+              <button
+                onClick={() => setShowSandboxModal(false)}
+                className="text-zinc-400 hover:text-white text-sm"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-amber-400" />
+                Flutterwave Sandbox Simulator
+              </h3>
+              <p className="text-xs text-zinc-400">
+                You are testing plan: <span className="text-white font-bold">{currentConfig.name}</span> for{' '}
+                <span className="text-emerald-400 font-bold">₦{sandboxData?.amount?.toLocaleString()} NGN</span>.
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-black/40 border border-zinc-800 space-y-2 text-xs font-mono">
+              <div className="flex justify-between text-zinc-400">
+                <span>Client ID:</span>
+                <span className="text-zinc-200 truncate max-w-[180px]">{sandboxData?.sandboxDetails?.clientId}</span>
+              </div>
+              <div className="flex justify-between text-zinc-400">
+                <span>Reference:</span>
+                <span className="text-zinc-200 truncate max-w-[180px]">{sandboxData?.txRef}</span>
+              </div>
+              <div className="flex justify-between text-zinc-400">
+                <span>User:</span>
+                <span className="text-emerald-400 font-bold">@{user.username}</span>
+              </div>
+            </div>
+
+            <div className="space-y-2.5 pt-2">
+              <button
+                onClick={() => handleExecuteSandboxPayment(true)}
+                disabled={sandboxSimulating}
+                className="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg shadow-emerald-500/20"
+              >
+                {sandboxSimulating ? (
+                  <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <CheckCircle2 className="w-4 h-4" />
+                    Simulate Successful Payment (Active Plan)
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={() => handleExecuteSandboxPayment(false)}
+                disabled={sandboxSimulating}
+                className="w-full py-2.5 px-4 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 font-medium text-xs transition-all cursor-pointer"
+              >
+                Simulate Declined Card (Failure)
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
