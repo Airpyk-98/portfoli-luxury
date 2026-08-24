@@ -22,12 +22,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid or expired session.' }, { status: 401 });
     }
 
-    const user = Database.findUserById(payload.id);
+    const user = await Database.findUserByIdAsync(payload.id);
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const pricing = Database.getPricingConfig();
+    const pricing = await Database.getPricingConfigAsync();
     const amount = targetTier === 'elite_5k' ? pricing.elite_5k.priceNgn : targetTier === 'pro_2k' ? pricing.pro_2k.priceNgn : 0;
 
     user.subscription = {
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
       user.portfolio.customSubdomain = user.username;
     }
 
-    Database.saveUser(user);
+    await Database.saveUserAsync(user);
 
     return NextResponse.json({
       success: true,

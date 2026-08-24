@@ -21,14 +21,14 @@ export async function GET(req: Request) {
   const cookieStore = await cookies();
   const token = cookieStore.get('portfoli_session')?.value;
 
-  const pricing = Database.getPricingConfig();
+  const pricing = await Database.getPricingConfigAsync();
 
   // If not admin, return public pricing
   if (!isAuthorizedAdmin(req, token)) {
     return NextResponse.json({ success: true, pricing });
   }
 
-  const users = Database.getUsers();
+  const users = await Database.getUsersAsync();
 
   // Subscriptions telemetry
   const totalUsers = users.length;
@@ -70,7 +70,7 @@ export async function PUT(req: Request) {
     }
 
     const updatedConfig = await req.json();
-    const result = Database.updatePricingConfig(updatedConfig);
+    const result = await Database.updatePricingConfigAsync(updatedConfig);
 
     return NextResponse.json({ success: true, pricing: result });
   } catch (err: any) {

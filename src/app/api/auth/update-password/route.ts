@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     if (token) {
       const payload = verifyToken(token);
       if (payload?.id) {
-        user = Database.findUserById(payload.id) || Database.findUserByUsername(payload.username);
+        user = (await Database.findUserByIdAsync(payload.id)) || (await Database.findUserByUsernameAsync(payload.username));
       }
     }
 
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     if (!user) {
       const lookup = username || email;
       if (lookup) {
-        user = Database.findUserByUsername(lookup) || Database.findUserByEmail(lookup);
+        user = (await Database.findUserByUsernameAsync(lookup)) || (await Database.findUserByEmailAsync(lookup));
       }
     }
 
@@ -77,7 +77,7 @@ export async function POST(req: Request) {
     const newHash = await hashPassword(newPassword.trim());
     user.passwordHash = newHash;
     user.updatedAt = new Date().toISOString();
-    Database.saveUser(user);
+    await Database.saveUserAsync(user);
 
     return NextResponse.json({
       success: true,

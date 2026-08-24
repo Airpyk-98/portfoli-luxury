@@ -19,7 +19,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid or expired session.' }, { status: 401 });
     }
 
-    const user = Database.findUserById(payload.id);
+    const user = await Database.findUserByIdAsync(payload.id);
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
 
     const fileSizeBytes = file.size;
     const fileName = file.name || `upload_${Date.now()}`;
-    const pricing = Database.getPricingConfig();
+    const pricing = await Database.getPricingConfigAsync();
 
     // 1. Calculate current user counts
     let currentVideos = 0;

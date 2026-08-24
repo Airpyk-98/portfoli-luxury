@@ -70,7 +70,7 @@ export async function PUT(req: Request) {
     const userId = payload.id;
 
     const portfolioData = await req.json();
-    const updated = Database.updatePortfolio(userId, portfolioData);
+    const updated = await Database.updatePortfolioAsync(userId, portfolioData);
 
     if (!updated) {
       return NextResponse.json({ error: 'Failed to update portfolio' }, { status: 500 });

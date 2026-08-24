@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ available: false, message: 'Username is reserved.' });
   }
 
-  const existing = Database.findUserByUsername(clean);
+  const existing = await Database.findUserByUsernameAsync(clean);
   return NextResponse.json({
     available: !existing,
     cleanUsername: clean,

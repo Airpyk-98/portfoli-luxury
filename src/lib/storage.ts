@@ -805,6 +805,31 @@ export class Database {
     return updatedPortfolio;
   }
 
+  static async updatePortfolioAsync(userId: string, portfolioData: Partial<UserPortfolio>): Promise<UserPortfolio | null> {
+    const user = await this.findUserByIdAsync(userId);
+    if (!user) return null;
+
+    const currentPortfolio = user.portfolio;
+    const updatedPortfolio: UserPortfolio = {
+      ...currentPortfolio,
+      ...portfolioData,
+      updatedAt: new Date().toISOString(),
+    };
+
+    // Calculate recalculated storage bytes
+    let totalBytes = 0;
+    updatedPortfolio.projects?.forEach((proj) => {
+      proj.media?.forEach((med) => {
+        totalBytes += med.sizeBytes || 0;
+      });
+    });
+
+    user.portfolio = updatedPortfolio;
+    user.storageUsedBytes = totalBytes;
+    await this.saveUserAsync(user);
+    return updatedPortfolio;
+  }
+
   // Dynamic Pricing Config
   static async getPricingConfigAsync(): Promise<PricingConfig> {
     try {
@@ -853,6 +878,15 @@ export class Database {
   }
 
   // Inquiries CRUD
+  static async getInquiriesAsync(portfolioUserId?: string): Promise<Inquiry[]> {
+    try {
+      const { getNeonInquiries } = require('./neon');
+      const neonInquiries = await getNeonInquiries(portfolioUserId);
+      if (neonInquiries && neonInquiries.length > 0) return neonInquiries;
+    } catch (e) {}
+    return this.getInquiries(portfolioUserId);
+  }
+
   static getInquiries(portfolioUserId?: string): Inquiry[] {
     const list = readJsonFile<Inquiry[]>('inquiries.json', []);
     if (portfolioUserId) {
@@ -861,17 +895,13 @@ export class Database {
     return list;
   }
 
-  static saveInquiry(inquiry: Omit<Inquiry, 'id' | 'createdAt' | 'read'>): Inquiry {
-    const list = this.getInquiries();
-    const newInquiry: Inquiry = {
-      ...inquiry,
-      id: `inq_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-      createdAt: new Date().toISOString(),
-      read: false,
-    };
-    list.unshift(newInquiry);
-    writeJsonFile('inquiries.json', list);
-    return newInquiry;
+  static async saveInquiryAsync(inquiry: Omit<Inquiry, 'id' | 'createdAt' | 'read'>): Promise<Inquiry> {
+    const local = this.saveInquiry(inquiry);
+    try {
+      const { saveNeonInquiry } = require('./neon');
+      await saveNeonInquiry(local);
+    } catch (e) {}
+    return local;
   }
 
   static markInquiryRead(inquiryId: string): boolean {

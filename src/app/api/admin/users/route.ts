@@ -131,7 +131,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'User ID is required.' }, { status: 400 });
     }
 
-    const user = Database.findUserById(userId);
+    const user = await Database.findUserByIdAsync(userId);
     if (!user) {
       return NextResponse.json({ error: 'User not found.' }, { status: 404 });
     }
@@ -150,7 +150,10 @@ export async function POST(req: NextRequest) {
         amountPaid: validTier === 'elite_5k' ? 5000 : validTier === 'pro_2k' ? 2000 : 0,
         currency: 'NGN',
       };
-      Database.saveUser(user);
+      if (validTier === 'elite_5k' && !user.portfolio.customSubdomain) {
+        user.portfolio.customSubdomain = user.username;
+      }
+      await Database.saveUserAsync(user);
     } else if (action === 'extend_days' && extendDays) {
       const days = Number(extendDays) || 30;
       const currentEnd = user.subscription?.endDate ? new Date(user.subscription.endDate) : new Date();
@@ -165,7 +168,7 @@ export async function POST(req: NextRequest) {
         amountPaid: user.subscription?.amountPaid || 0,
         currency: 'NGN',
       };
-      Database.saveUser(user);
+      await Database.saveUserAsync(user);
     }
 
     return NextResponse.json({
