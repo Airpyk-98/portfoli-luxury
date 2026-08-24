@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
       secretKey: isMasked(body.secretKey) ? current.secretKey : (body.secretKey || '').trim(),
       publicKey: isMasked(body.publicKey) ? current.publicKey : (body.publicKey || '').trim(),
       encryptionKey: isMasked(body.encryptionKey) ? current.encryptionKey : (body.encryptionKey || '').trim(),
-      webhookSecretHash: (body.webhookSecretHash || current.webhookSecretHash || 'portfoli_flw_live_secret_hash_2026').trim(),
+      webhookSecretHash: (body.webhookSecretHash !== undefined ? body.webhookSecretHash : current.webhookSecretHash || 'myportfoli_flw_live_secret_hash_2026').trim(),
       gtmContainerId: (body.gtmContainerId || '').trim(),
       ga4MeasurementId: (body.ga4MeasurementId || '').trim(),
       lookerStudioEmbedUrl: (body.lookerStudioEmbedUrl || '').trim(),

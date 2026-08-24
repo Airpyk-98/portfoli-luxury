@@ -26,7 +26,7 @@ const DEFAULT_SETTINGS: PaymentGatewaySettings = {
   secretKey: 'LrmNFMn2jzZAkHQQQRYryPbTpejlkDzX',
   publicKey: 'FLWPUBK-12c95a21380df8ff3cc01a7e077d4ebc-X',
   encryptionKey: '+XHci2HLXOgOnVYuxEIhzl1sM/C0asfWv7lhgDVOCUI=',
-  webhookSecretHash: 'portfoli_flw_live_secret_hash_2026',
+  webhookSecretHash: 'myportfoli_flw_live_secret_hash_2026',
   gtmContainerId: 'GTM-MSFTWV9X',
   ga4MeasurementId: '',
   lookerStudioEmbedUrl: '',
