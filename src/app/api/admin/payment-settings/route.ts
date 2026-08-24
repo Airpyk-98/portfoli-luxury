@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
-  getPaymentSettings,
-  savePaymentSettings,
+  getPaymentSettingsAsync,
+  savePaymentSettingsAsync,
+  getMaskedPaymentSettingsAsync,
   getMaskedPaymentSettings,
   getLiveRevenueStats,
 } from '@/lib/payment-settings';

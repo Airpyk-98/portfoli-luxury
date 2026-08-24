@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { Database } from '@/lib/storage';
-import { getPaymentSettings, saveTransaction } from '@/lib/payment-settings';
+import { getPaymentSettingsAsync, saveTransaction } from '@/lib/payment-settings';
 import { TierType, PaymentTransaction } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';

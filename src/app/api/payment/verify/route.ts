@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Database } from '@/lib/storage';
-import { getPaymentSettings, saveTransaction, getTransactions } from '@/lib/payment-settings';
+import { getPaymentSettingsAsync, saveTransaction, getTransactions } from '@/lib/payment-settings';
 import { TierType } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';

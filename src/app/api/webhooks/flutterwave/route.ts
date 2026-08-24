@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Database } from '@/lib/storage';
-import { getPaymentSettings, saveTransaction, getTransactions } from '@/lib/payment-settings';
+import { getPaymentSettingsAsync, saveTransaction, getTransactions } from '@/lib/payment-settings';
 import { TierType, PaymentTransaction } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -9,7 +9,7 @@ export const revalidate = 0;
 export async function POST(req: NextRequest) {
   try {
     const signature = req.headers.get('verif-hash');
-    const settings = getPaymentSettings();
+    const settings = await getPaymentSettingsAsync();
 
     // Verify webhook signature if configured
     if (settings.webhookSecretHash && signature !== settings.webhookSecretHash) {
@@ -32,7 +32,8 @@ export async function POST(req: NextRequest) {
     const currency = data.currency || 'NGN';
     const email = data.customer?.email?.toLowerCase();
     const userId = data.meta?.userId;
-    const pricing = Database.getPricingConfig();
+    const username = data.meta?.username;
+    const pricing = await Database.getPricingConfigAsync();
     const tier: TierType =
       (data.meta?.tier as TierType) ||
       (amount < pricing.elite_5k.priceNgn ? 'pro_2k' : 'elite_5k');
@@ -41,12 +42,12 @@ export async function POST(req: NextRequest) {
 
     if (isSuccessful) {
       // Find matching user
-      let user = userId ? Database.findUserById(userId) : null;
+      let user = userId ? await Database.findUserByIdAsync(userId) : null;
       if (!user && username) {
-        user = Database.findUserByUsername(username);
+        user = await Database.findUserByUsernameAsync(username);
       }
       if (!user && email) {
-        user = Database.findUserByEmail(email);
+        user = await Database.findUserByEmailAsync(email);
       }
 
       if (user) {
@@ -71,7 +72,7 @@ export async function POST(req: NextRequest) {
           user.portfolio.customSubdomain = user.username;
         }
 
-        Database.updateUser(user);
+        await Database.saveUserAsync(user);
 
         // Record or Update Successful Transaction
         saveTransaction({
