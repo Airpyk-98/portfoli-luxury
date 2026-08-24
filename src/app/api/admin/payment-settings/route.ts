@@ -52,18 +52,31 @@ export async function POST(req: NextRequest) {
     // If masked placeholder was sent, retain current secret
     const isMasked = (val?: string) => val && val.includes('••••••••');
 
+    const liveInput = body.live || {};
+    const testInput = body.test || {};
+
     const updated = await savePaymentSettingsAsync({
       provider: 'flutterwave',
       environment: body.environment === 'test' ? 'test' : 'live',
-      clientId: isMasked(body.clientId) ? current.clientId : (body.clientId || '').trim(),
-      clientSecret: isMasked(body.clientSecret) ? current.clientSecret : (body.clientSecret || '').trim(),
-      secretKey: isMasked(body.secretKey) ? current.secretKey : (body.secretKey || '').trim(),
-      publicKey: isMasked(body.publicKey) ? current.publicKey : (body.publicKey || '').trim(),
-      encryptionKey: isMasked(body.encryptionKey) ? current.encryptionKey : (body.encryptionKey || '').trim(),
-      webhookSecretHash: (body.webhookSecretHash !== undefined ? body.webhookSecretHash : current.webhookSecretHash || 'myportfoli_flw_live_secret_hash_2026').trim(),
-      gtmContainerId: (body.gtmContainerId || '').trim(),
-      ga4MeasurementId: (body.ga4MeasurementId || '').trim(),
-      lookerStudioEmbedUrl: (body.lookerStudioEmbedUrl || '').trim(),
+      live: {
+        clientId: liveInput.clientId !== undefined ? liveInput.clientId.trim() : (isMasked(body.clientId) ? current.live.clientId : (body.clientId !== undefined ? body.clientId.trim() : current.live.clientId)),
+        clientSecret: liveInput.clientSecret && !isMasked(liveInput.clientSecret) ? liveInput.clientSecret.trim() : (!isMasked(body.clientSecret) && body.clientSecret ? body.clientSecret.trim() : current.live.clientSecret),
+        secretKey: liveInput.secretKey && !isMasked(liveInput.secretKey) ? liveInput.secretKey.trim() : (!isMasked(body.secretKey) && body.secretKey ? body.secretKey.trim() : current.live.secretKey),
+        publicKey: liveInput.publicKey !== undefined ? liveInput.publicKey.trim() : (body.publicKey !== undefined ? body.publicKey.trim() : current.live.publicKey),
+        encryptionKey: liveInput.encryptionKey && !isMasked(liveInput.encryptionKey) ? liveInput.encryptionKey.trim() : (!isMasked(body.encryptionKey) && body.encryptionKey ? body.encryptionKey.trim() : current.live.encryptionKey),
+        webhookSecretHash: liveInput.webhookSecretHash !== undefined ? liveInput.webhookSecretHash.trim() : (body.webhookSecretHash !== undefined ? body.webhookSecretHash.trim() : current.live.webhookSecretHash),
+      },
+      test: {
+        clientId: testInput.clientId !== undefined ? testInput.clientId.trim() : current.test.clientId,
+        clientSecret: testInput.clientSecret && !isMasked(testInput.clientSecret) ? testInput.clientSecret.trim() : current.test.clientSecret,
+        secretKey: testInput.secretKey && !isMasked(testInput.secretKey) ? testInput.secretKey.trim() : current.test.secretKey,
+        publicKey: testInput.publicKey !== undefined ? testInput.publicKey.trim() : current.test.publicKey,
+        encryptionKey: testInput.encryptionKey && !isMasked(testInput.encryptionKey) ? testInput.encryptionKey.trim() : current.test.encryptionKey,
+        webhookSecretHash: testInput.webhookSecretHash !== undefined ? testInput.webhookSecretHash.trim() : current.test.webhookSecretHash,
+      },
+      gtmContainerId: (body.gtmContainerId || current.gtmContainerId || '').trim(),
+      ga4MeasurementId: (body.ga4MeasurementId || current.ga4MeasurementId || '').trim(),
+      lookerStudioEmbedUrl: (body.lookerStudioEmbedUrl || current.lookerStudioEmbedUrl || '').trim(),
       enabled: body.enabled !== undefined ? Boolean(body.enabled) : true,
     });
 

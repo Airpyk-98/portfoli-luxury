@@ -2,9 +2,21 @@ import fs from 'fs';
 import path from 'path';
 import { PaymentTransaction } from './types';
 
+export interface EnvironmentCredentials {
+  clientId: string;
+  clientSecret: string;
+  secretKey: string;
+  publicKey: string;
+  encryptionKey: string;
+  webhookSecretHash: string;
+}
+
 export interface PaymentGatewaySettings {
   provider: 'flutterwave';
   environment: 'live' | 'test';
+  live: EnvironmentCredentials;
+  test: EnvironmentCredentials;
+  // Computed active credentials based on environment
   clientId: string;
   clientSecret: string;
   secretKey: string;
@@ -18,15 +30,35 @@ export interface PaymentGatewaySettings {
   updatedAt: string;
 }
 
-const DEFAULT_SETTINGS: PaymentGatewaySettings = {
-  provider: 'flutterwave',
-  environment: 'live',
+export const DEFAULT_LIVE_CREDENTIALS: EnvironmentCredentials = {
   clientId: 'bd08bd61-4ef5-48aa-bd97-54baa6cb8e94',
   clientSecret: 'LrmNFMn2jzZAkHQQQRYryPbTpejlkDzX',
   secretKey: 'LrmNFMn2jzZAkHQQQRYryPbTpejlkDzX',
   publicKey: 'FLWPUBK-12c95a21380df8ff3cc01a7e077d4ebc-X',
   encryptionKey: '+XHci2HLXOgOnVYuxEIhzl1sM/C0asfWv7lhgDVOCUI=',
   webhookSecretHash: 'myportfoli_flw_live_secret_hash_2026',
+};
+
+export const DEFAULT_TEST_CREDENTIALS: EnvironmentCredentials = {
+  clientId: '0cdcb25c-c586-4ed6-bed5-5dbeab11afcf',
+  clientSecret: 'm1FHHwKLK1ea8L6UqdDnpeER0UQSuvAQ',
+  secretKey: 'm1FHHwKLK1ea8L6UqdDnpeER0UQSuvAQ',
+  publicKey: 'FLWPUBK_TEST-0cdcb25c-c586-4ed6-bed5-5dbeab11afcf',
+  encryptionKey: 'jg2t/iQ4lnixhzvE14Ub/1y3n4Q1cr+MzF3xpHX0U/Q=',
+  webhookSecretHash: 'myportfoli_flw_test_secret_hash_2026',
+};
+
+const DEFAULT_SETTINGS: PaymentGatewaySettings = {
+  provider: 'flutterwave',
+  environment: 'live',
+  live: DEFAULT_LIVE_CREDENTIALS,
+  test: DEFAULT_TEST_CREDENTIALS,
+  clientId: DEFAULT_LIVE_CREDENTIALS.clientId,
+  clientSecret: DEFAULT_LIVE_CREDENTIALS.clientSecret,
+  secretKey: DEFAULT_LIVE_CREDENTIALS.secretKey,
+  publicKey: DEFAULT_LIVE_CREDENTIALS.publicKey,
+  encryptionKey: DEFAULT_LIVE_CREDENTIALS.encryptionKey,
+  webhookSecretHash: DEFAULT_LIVE_CREDENTIALS.webhookSecretHash,
   gtmContainerId: 'GTM-MSFTWV9X',
   ga4MeasurementId: '',
   lookerStudioEmbedUrl: '',
@@ -69,6 +101,38 @@ function getTransactionsFilePath(): string {
   return path.join(LOCAL_DATA_DIR, 'transactions.json');
 }
 
+function resolveActiveCredentials(settings: any): PaymentGatewaySettings {
+  const env: 'live' | 'test' = settings.environment === 'test' ? 'test' : 'live';
+  const liveCreds: EnvironmentCredentials = {
+    ...DEFAULT_LIVE_CREDENTIALS,
+    ...(settings.live || {}),
+  };
+  const testCreds: EnvironmentCredentials = {
+    ...DEFAULT_TEST_CREDENTIALS,
+    ...(settings.test || {}),
+  };
+
+  const active = env === 'test' ? testCreds : liveCreds;
+
+  return {
+    provider: 'flutterwave',
+    environment: env,
+    live: liveCreds,
+    test: testCreds,
+    clientId: active.clientId,
+    clientSecret: active.clientSecret,
+    secretKey: active.secretKey,
+    publicKey: active.publicKey,
+    encryptionKey: active.encryptionKey,
+    webhookSecretHash: active.webhookSecretHash,
+    gtmContainerId: settings.gtmContainerId || 'GTM-MSFTWV9X',
+    ga4MeasurementId: settings.ga4MeasurementId || '',
+    lookerStudioEmbedUrl: settings.lookerStudioEmbedUrl || '',
+    enabled: settings.enabled !== undefined ? Boolean(settings.enabled) : true,
+    updatedAt: settings.updatedAt || new Date().toISOString(),
+  };
+}
+
 export function getPaymentSettings(): PaymentGatewaySettings {
   let settings = DEFAULT_SETTINGS;
 
@@ -91,28 +155,26 @@ export function getPaymentSettings(): PaymentGatewaySettings {
     }
   }
 
-  // Override with environment variables if available
-  const finalSettings: PaymentGatewaySettings = {
-    ...settings,
-    secretKey: process.env.FLUTTERWAVE_SECRET_KEY || process.env.FLW_SECRET_KEY || settings.secretKey,
-    publicKey: process.env.FLUTTERWAVE_PUBLIC_KEY || process.env.FLW_PUBLIC_KEY || settings.publicKey,
-    clientId: process.env.FLUTTERWAVE_CLIENT_ID || process.env.FLW_CLIENT_ID || settings.clientId,
-    clientSecret: process.env.FLUTTERWAVE_CLIENT_SECRET || process.env.FLW_CLIENT_SECRET || settings.clientSecret,
-    encryptionKey: process.env.FLUTTERWAVE_ENCRYPTION_KEY || process.env.FLW_ENCRYPTION_KEY || settings.encryptionKey,
-    webhookSecretHash: process.env.FLUTTERWAVE_WEBHOOK_HASH || settings.webhookSecretHash,
-  };
-
+  const finalSettings = resolveActiveCredentials(settings);
   globalThis.__portfoli_payment_settings = finalSettings;
   return finalSettings;
 }
 
 export function savePaymentSettings(settings: Partial<PaymentGatewaySettings>): PaymentGatewaySettings {
   const current = getPaymentSettings();
-  const updated: PaymentGatewaySettings = {
+  const updated = resolveActiveCredentials({
     ...current,
     ...settings,
+    live: {
+      ...current.live,
+      ...(settings.live || {}),
+    },
+    test: {
+      ...current.test,
+      ...(settings.test || {}),
+    },
     updatedAt: new Date().toISOString(),
-  };
+  });
 
   globalThis.__portfoli_payment_settings = updated;
 
@@ -145,23 +207,12 @@ export async function getPaymentSettingsAsync(): Promise<PaymentGatewaySettings>
     const { getNeonPaymentSettings } = require('./neon');
     const dbSettings = await getNeonPaymentSettings();
     if (dbSettings) {
-      settings = { ...settings, ...dbSettings };
+      settings = resolveActiveCredentials({ ...settings, ...dbSettings });
     }
   } catch (e) {}
 
-  // Override with environment variables if available
-  const finalSettings: PaymentGatewaySettings = {
-    ...settings,
-    secretKey: process.env.FLUTTERWAVE_SECRET_KEY || process.env.FLW_SECRET_KEY || settings.secretKey,
-    publicKey: process.env.FLUTTERWAVE_PUBLIC_KEY || process.env.FLW_PUBLIC_KEY || settings.publicKey,
-    clientId: process.env.FLUTTERWAVE_CLIENT_ID || process.env.FLW_CLIENT_ID || settings.clientId,
-    clientSecret: process.env.FLUTTERWAVE_CLIENT_SECRET || process.env.FLW_CLIENT_SECRET || settings.clientSecret,
-    encryptionKey: process.env.FLUTTERWAVE_ENCRYPTION_KEY || process.env.FLW_ENCRYPTION_KEY || settings.encryptionKey,
-    webhookSecretHash: process.env.FLUTTERWAVE_WEBHOOK_HASH || settings.webhookSecretHash,
-  };
-
-  globalThis.__portfoli_payment_settings = finalSettings;
-  return finalSettings;
+  globalThis.__portfoli_payment_settings = settings;
+  return settings;
 }
 
 export async function savePaymentSettingsAsync(settings: Partial<PaymentGatewaySettings>): Promise<PaymentGatewaySettings> {
@@ -183,10 +234,27 @@ export function getMaskedPaymentSettings(customSettings?: PaymentGatewaySettings
   return {
     provider: s.provider,
     environment: s.environment,
-    clientId: mask(s.clientId),
+    live: {
+      clientId: s.live.clientId,
+      clientSecret: mask(s.live.clientSecret),
+      secretKey: mask(s.live.secretKey),
+      publicKey: s.live.publicKey,
+      encryptionKey: mask(s.live.encryptionKey),
+      webhookSecretHash: s.live.webhookSecretHash,
+    },
+    test: {
+      clientId: s.test.clientId,
+      clientSecret: mask(s.test.clientSecret),
+      secretKey: mask(s.test.secretKey),
+      publicKey: s.test.publicKey,
+      encryptionKey: mask(s.test.encryptionKey),
+      webhookSecretHash: s.test.webhookSecretHash,
+    },
+    // Active environment masked keys
+    clientId: s.clientId,
     clientSecret: mask(s.clientSecret),
     secretKey: mask(s.secretKey),
-    publicKey: s.publicKey ? s.publicKey.slice(0, 8) + '••••••••' + s.publicKey.slice(-4) : '',
+    publicKey: s.publicKey,
     encryptionKey: mask(s.encryptionKey),
     webhookSecretHash: s.webhookSecretHash,
     gtmContainerId: s.gtmContainerId,

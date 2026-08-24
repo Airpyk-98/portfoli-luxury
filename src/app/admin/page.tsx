@@ -69,14 +69,30 @@ export default function AdminControlPage() {
   // Flutterwave & GTM Settings State
   const [paymentSettings, setPaymentSettings] = useState({
     provider: 'flutterwave',
-    environment: 'live',
+    environment: 'live' as 'live' | 'test',
+    live: {
+      clientId: 'bd08bd61-4ef5-48aa-bd97-54baa6cb8e94',
+      clientSecret: '',
+      secretKey: '',
+      publicKey: 'FLWPUBK-12c95a21380df8ff3cc01a7e077d4ebc-X',
+      encryptionKey: '',
+      webhookSecretHash: 'myportfoli_flw_live_secret_hash_2026',
+    },
+    test: {
+      clientId: '0cdcb25c-c586-4ed6-bed5-5dbeab11afcf',
+      clientSecret: '',
+      secretKey: '',
+      publicKey: 'FLWPUBK_TEST-0cdcb25c-c586-4ed6-bed5-5dbeab11afcf',
+      encryptionKey: '',
+      webhookSecretHash: 'myportfoli_flw_test_secret_hash_2026',
+    },
     clientId: '',
     clientSecret: '',
     secretKey: '',
     publicKey: '',
     encryptionKey: '',
-    webhookSecretHash: 'portfoli_flw_live_secret_hash_2026',
-    gtmContainerId: '',
+    webhookSecretHash: 'myportfoli_flw_live_secret_hash_2026',
+    gtmContainerId: 'GTM-MSFTWV9X',
     ga4MeasurementId: '',
     lookerStudioEmbedUrl: '',
     enabled: true,
@@ -908,78 +924,184 @@ export default function AdminControlPage() {
             </div>
 
             <form onSubmit={handleSavePaymentSettings} className="space-y-6">
+              {/* Active Environment Toggle Bar */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-black/40 border border-border">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className={`w-2.5 h-2.5 rounded-full animate-pulse ${paymentSettings.environment === 'live' ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+                    <h4 className="text-sm font-bold text-foreground">Active Payment Gateway Environment</h4>
+                  </div>
+                  <p className="text-xs text-zinc-400 mt-0.5">
+                    Currently active mode: <strong className={paymentSettings.environment === 'live' ? 'text-emerald-400' : 'text-amber-400'}>
+                      {paymentSettings.environment === 'live' ? 'Live Production (v4 Gateway)' : 'Test / Sandbox Simulator'}
+                    </strong>
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPaymentSettings({ ...paymentSettings, environment: 'live' })}
+                    className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
+                      paymentSettings.environment === 'live'
+                        ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20'
+                        : 'bg-card-bg text-zinc-400 hover:text-white border border-border'
+                    }`}
+                  >
+                    🟢 Live Production
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentSettings({ ...paymentSettings, environment: 'test' })}
+                    className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
+                      paymentSettings.environment === 'test'
+                        ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20'
+                        : 'bg-card-bg text-zinc-400 hover:text-white border border-border'
+                    }`}
+                  >
+                    🟡 Test / Sandbox
+                  </button>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Gateway Credentials */}
-                <GlassCard intensity="high" className="p-6 space-y-4">
+                {/* Live Credentials Card */}
+                <GlassCard intensity="high" className={`p-6 space-y-4 transition-all ${paymentSettings.environment === 'live' ? 'border-emerald-500/50 shadow-lg shadow-emerald-500/10' : 'opacity-70'}`}>
                   <div className="flex items-center justify-between border-b border-border pb-3">
                     <div className="flex items-center gap-2">
                       <CreditCard className="w-4 h-4 text-emerald-500" />
-                      <h3 className="text-sm font-bold text-foreground">API Credentials</h3>
+                      <h3 className="text-sm font-bold text-foreground">🟢 Live Production Credentials</h3>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <label className="text-xs font-mono font-bold text-zinc-400">Environment:</label>
-                      <select
-                        value={paymentSettings.environment}
-                        onChange={(e) => setPaymentSettings({ ...paymentSettings, environment: e.target.value as any })}
-                        className="bg-card-bg border border-border text-foreground rounded-lg px-2.5 py-1 text-xs font-mono font-bold"
-                      >
-                        <option value="live">Live Production (v4)</option>
-                        <option value="test">Test / Sandbox</option>
-                      </select>
-                    </div>
+                    {paymentSettings.environment === 'live' && (
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        ACTIVE
+                      </span>
+                    )}
                   </div>
 
                   <GlassInput
-                    label="Flutterwave Client ID (v4 OAuth 2.0)"
-                    placeholder="Enter your Client ID"
-                    value={paymentSettings.clientId}
-                    onChange={(e) => setPaymentSettings({ ...paymentSettings, clientId: e.target.value })}
-                    helperText="Used to generate temporary OAuth 2.0 Bearer tokens"
+                    label="Live Client ID (v4 OAuth 2.0)"
+                    placeholder="bd08bd61-4ef5-48aa-bd97-54baa6cb8e94"
+                    value={paymentSettings.live?.clientId || ''}
+                    onChange={(e) => setPaymentSettings({
+                      ...paymentSettings,
+                      live: { ...(paymentSettings.live || {}), clientId: e.target.value },
+                    })}
                   />
 
                   <GlassInput
-                    label="Flutterwave Client Secret (v4 OAuth 2.0)"
+                    label="Live Client Secret (v4 OAuth 2.0)"
                     type="password"
-                    placeholder="Enter your Client Secret"
-                    value={paymentSettings.clientSecret}
-                    onChange={(e) => setPaymentSettings({ ...paymentSettings, clientSecret: e.target.value })}
+                    placeholder="Enter Live Client Secret"
+                    value={paymentSettings.live?.clientSecret || ''}
+                    onChange={(e) => setPaymentSettings({
+                      ...paymentSettings,
+                      live: { ...(paymentSettings.live || {}), clientSecret: e.target.value },
+                    })}
                   />
 
                   <GlassInput
-                    label="Flutterwave Secret Key (FLWSECK-...)"
+                    label="Live Public Key (FLWPUBK-...)"
+                    placeholder="FLWPUBK-12c95a21380df8ff3cc01a7e077d4ebc-X"
+                    value={paymentSettings.live?.publicKey || ''}
+                    onChange={(e) => setPaymentSettings({
+                      ...paymentSettings,
+                      live: { ...(paymentSettings.live || {}), publicKey: e.target.value },
+                    })}
+                    helperText="Required for live checkout modal popup"
+                  />
+
+                  <GlassInput
+                    label="Live Encryption Key"
                     type="password"
-                    placeholder="FLWSECK-xxxxxxxxxxxxxxxxxxxx"
-                    value={paymentSettings.secretKey}
-                    onChange={(e) => setPaymentSettings({ ...paymentSettings, secretKey: e.target.value })}
-                    helperText="Required for transaction verification and live analytics"
+                    placeholder="Enter Live Encryption Key"
+                    value={paymentSettings.live?.encryptionKey || ''}
+                    onChange={(e) => setPaymentSettings({
+                      ...paymentSettings,
+                      live: { ...(paymentSettings.live || {}), encryptionKey: e.target.value },
+                    })}
                   />
 
                   <GlassInput
-                    label="Flutterwave Encryption Key (FLWSECK_3DES-...)"
-                    type="password"
-                    placeholder="FLWSECK_3DES-xxxxxxxxxxxxxxxxxxxx"
-                    value={paymentSettings.encryptionKey}
-                    onChange={(e) => setPaymentSettings({ ...paymentSettings, encryptionKey: e.target.value })}
-                    helperText="Required for 3DES direct charge encryption and secure payload hashing"
-                  />
-
-                  <GlassInput
-                    label="Flutterwave Public Key (FLWPUBK-...)"
-                    placeholder="FLWPUBK-xxxxxxxxxxxxxxxxxxxx"
-                    value={paymentSettings.publicKey}
-                    onChange={(e) => setPaymentSettings({ ...paymentSettings, publicKey: e.target.value })}
-                  />
-
-                  <GlassInput
-                    label="Webhook Secret Hash"
-                    placeholder="portfoli_flw_live_secret_hash_2026"
-                    value={paymentSettings.webhookSecretHash}
-                    onChange={(e) => setPaymentSettings({ ...paymentSettings, webhookSecretHash: e.target.value })}
-                    helperText="Enter the same secret hash in your Flutterwave Webhook settings"
+                    label="Live Webhook Secret Hash"
+                    placeholder="myportfoli_flw_live_secret_hash_2026"
+                    value={paymentSettings.live?.webhookSecretHash || 'myportfoli_flw_live_secret_hash_2026'}
+                    onChange={(e) => setPaymentSettings({
+                      ...paymentSettings,
+                      live: { ...(paymentSettings.live || {}), webhookSecretHash: e.target.value },
+                    })}
                   />
                 </GlassCard>
 
-                {/* Webhook Configuration Guide */}
+                {/* Sandbox / Test Credentials Card */}
+                <GlassCard intensity="high" className={`p-6 space-y-4 transition-all ${paymentSettings.environment === 'test' ? 'border-amber-500/50 shadow-lg shadow-amber-500/10' : 'opacity-70'}`}>
+                  <div className="flex items-center justify-between border-b border-border pb-3">
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="w-4 h-4 text-amber-500" />
+                      <h3 className="text-sm font-bold text-foreground">🟡 Sandbox / Test Credentials</h3>
+                    </div>
+                    {paymentSettings.environment === 'test' && (
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                        ACTIVE
+                      </span>
+                    )}
+                  </div>
+
+                  <GlassInput
+                    label="Sandbox Client ID"
+                    placeholder="0cdcb25c-c586-4ed6-bed5-5dbeab11afcf"
+                    value={paymentSettings.test?.clientId || ''}
+                    onChange={(e) => setPaymentSettings({
+                      ...paymentSettings,
+                      test: { ...(paymentSettings.test || {}), clientId: e.target.value },
+                    })}
+                  />
+
+                  <GlassInput
+                    label="Sandbox Client Secret"
+                    type="password"
+                    placeholder="m1FHHwKLK1ea8L6UqdDnpeER0UQSuvAQ"
+                    value={paymentSettings.test?.clientSecret || ''}
+                    onChange={(e) => setPaymentSettings({
+                      ...paymentSettings,
+                      test: { ...(paymentSettings.test || {}), clientSecret: e.target.value },
+                    })}
+                  />
+
+                  <GlassInput
+                    label="Sandbox Encryption Key"
+                    type="password"
+                    placeholder="jg2t/iQ4lnixhzvE14Ub/1y3n4Q1cr+MzF3xpHX0U/Q="
+                    value={paymentSettings.test?.encryptionKey || ''}
+                    onChange={(e) => setPaymentSettings({
+                      ...paymentSettings,
+                      test: { ...(paymentSettings.test || {}), encryptionKey: e.target.value },
+                    })}
+                  />
+
+                  <GlassInput
+                    label="Sandbox Public Key (Optional)"
+                    placeholder="FLWPUBK_TEST-..."
+                    value={paymentSettings.test?.publicKey || ''}
+                    onChange={(e) => setPaymentSettings({
+                      ...paymentSettings,
+                      test: { ...(paymentSettings.test || {}), publicKey: e.target.value },
+                    })}
+                  />
+
+                  <GlassInput
+                    label="Sandbox Webhook Secret Hash"
+                    placeholder="myportfoli_flw_test_secret_hash_2026"
+                    value={paymentSettings.test?.webhookSecretHash || 'myportfoli_flw_test_secret_hash_2026'}
+                    onChange={(e) => setPaymentSettings({
+                      ...paymentSettings,
+                      test: { ...(paymentSettings.test || {}), webhookSecretHash: e.target.value },
+                    })}
+                  />
+                </GlassCard>
+              </div>
+
+              {/* Webhook Configuration Guide & Telemetry */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <GlassCard intensity="high" className="p-6 space-y-4 flex flex-col justify-between">
                   <div className="space-y-4">
                     <div className="flex items-center gap-2 border-b border-border pb-3">
